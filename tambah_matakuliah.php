@@ -15,34 +15,47 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     verify_csrf_token();
     
     // Ambil dan bersihkan data dari form
-    $kode_mk = mysqli_real_escape_string($koneksi, $_POST['kode_mk']);
-    $nama_mk = mysqli_real_escape_string($koneksi, $_POST['nama_mk']);
+    $kode_mk = $_POST['kode_mk'];
+    $nama_mk = $_POST['nama_mk'];
     $sks = (int)$_POST['sks']; 
     $semester = (int)$_POST['semester'];
     
     // Data Jadwal
-    $hari = mysqli_real_escape_string($koneksi, $_POST['hari']);
-    $jam_mulai = mysqli_real_escape_string($koneksi, $_POST['jam_mulai']);
-    $jam_selesai = mysqli_real_escape_string($koneksi, $_POST['jam_selesai']);
-    $ruangan = mysqli_real_escape_string($koneksi, $_POST['ruangan']);
+    $hari = $_POST['hari'];
+    $jam_mulai = $_POST['jam_mulai'];
+    $jam_selesai = $_POST['jam_selesai'];
+    $ruangan = $_POST['ruangan'];
 
     // Validasi dasar
     if (!empty($kode_mk) && !empty($nama_mk) && $sks > 0 && $semester > 0) {
         
-        // Buat kueri INSERT
-        $sql = "INSERT INTO mata_kuliah (kode_mk, nama_mk, sks, semester, hari, jam_mulai, jam_selesai, ruangan) 
-                VALUES ('$kode_mk', '$nama_mk', $sks, $semester, '$hari', '$jam_mulai', '$jam_selesai', '$ruangan')";
-        
-        // Jalankan kueri
-        if (mysqli_query($koneksi, $sql)) {
-            $pesan = "Mata kuliah baru berhasil ditambahkan!";
-            $pesan_tipe = "success";
-        } else {
-            // ... error handling ...
-            if (mysqli_errno($koneksi) == 1062) {
+        try {
+            // Buat kueri INSERT
+            $sql = "INSERT INTO mata_kuliah (kode_mk, nama_mk, sks, semester, hari, jam_mulai, jam_selesai, ruangan) 
+                    VALUES (:kode, :nama, :sks, :smt, :hari, :mulai, :selesai, :ruang)";
+            
+            $stmt = $koneksi->prepare($sql);
+            
+            // Jalankan kueri
+            if ($stmt->execute([
+                ':kode' => $kode_mk,
+                ':nama' => $nama_mk,
+                ':sks' => $sks,
+                ':smt' => $semester,
+                ':hari' => $hari,
+                ':mulai' => $jam_mulai,
+                ':selesai' => $jam_selesai,
+                ':ruang' => $ruangan
+            ])) {
+                $pesan = "Mata kuliah baru berhasil ditambahkan!";
+                $pesan_tipe = "success";
+            }
+        } catch (PDOException $e) {
+            // Error handling
+            if ($e->getCode() == 23000) { // Integrity constraint violation (Duplicate key)
                 $pesan = "Error: Kode MK '$kode_mk' sudah terdaftar. Gunakan kode lain.";
             } else {
-                $pesan = "Error: " . mysqli_error($koneksi);
+                $pesan = "Error: " . $e->getMessage();
             }
             $pesan_tipe = "danger";
         }
@@ -147,7 +160,5 @@ include 'header.php';
     </div>
 
 <?php include 'footer.php'; ?>
-<?php
-// Tutup koneksi di akhir
-mysqli_close($koneksi);
+<?php // No close needed
 ?>

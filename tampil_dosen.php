@@ -30,8 +30,9 @@ if (isset($_GET['status'])) {
 }
 
 // Ambil semua data dosen
-$sql = "SELECT * FROM dosen ORDER BY nama_dosen";
-$hasil = mysqli_query($koneksi, $sql);
+// Ambil semua data dosen
+// Query will be executed below
+
 
 $page_title = "Daftar Dosen";
 include 'header.php'; 
@@ -69,22 +70,31 @@ include 'header.php';
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
                         <?php
-                        if (mysqli_num_rows($hasil) > 0) {
-                            while ($data = mysqli_fetch_assoc($hasil)) {
-                                echo "<tr class='hover:bg-gray-50 transition-colors duration-150'>";
-                                echo "<td class='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900'>" . htmlspecialchars($data['nip']) . "</td>";
-                                echo "<td class='px-6 py-4 whitespace-nowrap text-sm text-gray-700'>" . htmlspecialchars($data['nama_dosen']) . "</td>";
-                                echo "<td class='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>" . htmlspecialchars($data['email']) . "</td>";
-                                echo "<td class='px-6 py-4 whitespace-nowrap text-right text-sm font-medium'>
-                                        <a href='edit_dosen.php?nip=" . $data['nip'] . "' class='text-indigo-600 hover:text-indigo-900 mr-4'>Edit</a>
-                                        <a href='hapus_dosen.php?nip=" . $data['nip'] . "' class='text-red-600 hover:text-red-900' onclick='return confirm(\"PERINGATAN: Menghapus dosen hanya bisa jika ia tidak terdaftar sebagai Dosen Wali. Lanjutkan?\");'>
-                                            Hapus
-                                        </a>
-                                      </td>";
-                                echo "</tr>";
+                        $sql = "SELECT * FROM dosen ORDER BY nama_dosen";
+                        
+                        try {
+                            $stmt = $koneksi->query($sql);
+                            $hasil = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                            if (count($hasil) > 0) {
+                                foreach ($hasil as $data) {
+                                    echo "<tr class='hover:bg-gray-50 transition-colors duration-150'>";
+                                    echo "<td class='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900'>" . htmlspecialchars($data['nip']) . "</td>";
+                                    echo "<td class='px-6 py-4 whitespace-nowrap text-sm text-gray-700'>" . htmlspecialchars($data['nama_dosen']) . "</td>";
+                                    echo "<td class='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>" . htmlspecialchars($data['email']) . "</td>";
+                                    echo "<td class='px-6 py-4 whitespace-nowrap text-right text-sm font-medium'>
+                                            <a href='edit_dosen.php?nip=" . $data['nip'] . "' class='text-indigo-600 hover:text-indigo-900 mr-4'>Edit</a>
+                                            <a href='hapus_dosen.php?nip=" . $data['nip'] . "' class='text-red-600 hover:text-red-900' onclick='return confirm(\"PERINGATAN: Menghapus dosen hanya bisa jika ia tidak terdaftar sebagai Dosen Wali. Lanjutkan?\");'>
+                                                Hapus
+                                            </a>
+                                          </td>";
+                                    echo "</tr>";
+                                }
+                            } else {
+                                echo "<tr><td colspan='4' class='px-6 py-4 text-center text-sm text-gray-500'>Tidak ada data dosen.</td></tr>";
                             }
-                        } else {
-                            echo "<tr><td colspan='4' class='px-6 py-4 text-center text-sm text-gray-500'>Tidak ada data dosen.</td></tr>";
+                        } catch (PDOException $e) {
+                             echo "<tr><td colspan='4' class='px-6 py-4 text-center text-red-500'>Error: " . $e->getMessage() . "</td></tr>";
                         }
                         ?>
                     </tbody>
@@ -94,4 +104,4 @@ include 'header.php';
     </div>
 
 <?php include 'footer.php'; ?>
-<?php mysqli_close($koneksi); ?>
+<?php // No close needed ?>

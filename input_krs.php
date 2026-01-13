@@ -10,21 +10,26 @@ $nim = $_SESSION['nim'] ?? ''; // Ambil NIM dari session
 
 // --- LOGIKA FALLBACK NIM UNTUK AKUN ILLEGAL/TESTING ---
 if (empty($nim)) {
-    $username_clean = mysqli_real_escape_string($koneksi, $_SESSION['username']);
-    $check_nim = mysqli_query($koneksi, "SELECT nim FROM mahasiswa WHERE nim = '$username_clean'");
-    if (mysqli_num_rows($check_nim) > 0) {
-        $nim = $username_clean;
-        $_SESSION['nim'] = $nim;
-    } else {
-        // Jangan die() di sini dulu, biarkan error message ditangani di layout bawah atau redirect
-        // Tapi karena script ini butuh NIM untuk logic POST, kita harus stop jika POST
-        if ($_SERVER["REQUEST_METHOD"] == "POST") {
-             include 'header.php';
-             echo "<div class='max-w-7xl mx-auto px-4 py-8'><div class='bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative' role='alert'><strong class='font-bold'>Error!</strong> <span class='block sm:inline'>Akun Anda tidak memiliki NIM yang valid (Kosong). Tidak dapat menyimpan KRS. Hubungi Admin.</span></div><div class='mt-4'><a href='index.php' class='text-blue-600 hover:text-blue-800 font-medium'>&larr; Kembali ke Beranda</a></div></div>";
-             include 'footer.php';
-             exit;
+    $username_clean = $_SESSION['username'];
+    try {
+        $stmt_check = $koneksi->prepare("SELECT nim FROM mahasiswa WHERE nim = ?");
+        $stmt_check->execute([$username_clean]);
+        if ($stmt_check->rowCount() > 0) {
+            $nim = $username_clean;
+            $_SESSION['nim'] = $nim;
+        } else {
+            // Jangan die() di sini dulu, biarkan error message ditangani di layout bawah atau redirect
+            // Tapi karena script ini butuh NIM untuk logic POST, kita harus stop jika POST
+            if ($_SERVER["REQUEST_METHOD"] == "POST") {
+                 include 'header.php';
+                 echo "<div class='max-w-7xl mx-auto px-4 py-8'><div class='bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative' role='alert'><strong class='font-bold'>Error!</strong> <span class='block sm:inline'>Akun Anda tidak memiliki NIM yang valid (Kosong). Tidak dapat menyimpan KRS. Hubungi Admin.</span></div><div class='mt-4'><a href='index.php' class='text-blue-600 hover:text-blue-800 font-medium'>&larr; Kembali ke Beranda</a></div></div>";
+                 include 'footer.php';
+                 exit;
+            }
+            // Jika GET, kita akan tampilkan pesan error cantik di body
         }
-        // Jika GET, kita akan tampilkan pesan error cantik di body
+    } catch(PDOException $e) {
+        // Handle error silently or log
     }
 }
 // --- END FALLBACK ---
@@ -48,23 +53,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $sql_cek_sks = "SELECT SUM(m.sks) as total_sks 
                         FROM krs k 
                         JOIN mata_kuliah m ON k.kode_matkul = m.kode_mk 
-                        WHERE k.nim_mahasiswa = ? AND k.semester = ?";
+                        WHERE k.nim_mahasiswa = :nim AND k.semester = :sem";
         
-        $stmt_cek = mysqli_prepare($koneksi, $sql_cek_sks);
-        mysqli_stmt_bind_param($stmt_cek, "ss", $nim, $semester_aktif);
-        mysqli_stmt_execute($stmt_cek);
-        $res_cek = mysqli_stmt_get_result($stmt_cek);
-        $row_cek = mysqli_fetch_assoc($res_cek);
-        $sks_existing = (int)$row_cek['total_sks'];
+        $stmt_cek = $koneksi->prepare($sql_cek_sks);
+        $stmt_cek->execute([':nim' => $nim, ':sem' => $semester_aktif]);
+        $row_cek = $stmt_cek->fetch(PDO::FETCH_ASSOC);
+        $sks_existing = (int)($row_cek['total_sks'] ?? 0);
 
         // 2. Hitung SKS yang BARU dipilih
-        // Kita butuh query ke DB untuk ambil SKS dari kode yang dikirim (amannya ambil dari DB, jangan dari hidden input)
-        $kode_in = "'" . implode("','", array_map(function($val) use ($koneksi) { return mysqli_real_escape_string($koneksi, $val); }, $matkul_dipilih)) . "'";
-        
-        $sql_new_sks = "SELECT SUM(sks) as total_sks_baru FROM mata_kuliah WHERE kode_mk IN ($kode_in)";
-        $res_new = mysqli_query($koneksi, $sql_new_sks);
-        $row_new = mysqli_fetch_assoc($res_new);
-        $sks_baru = (int)$row_new['total_sks_baru'];
+        // Kita butuh query ke DB untuk ambil SKS dari kode yang dikirim
+        // Create placeholders for IN clause
+        $placeholders = str_repeat('?,', count($matkul_dipilih) - 1) . '?';
+        $sql_new_sks = "SELECT SUM(sks) as total_sks_baru FROM mata_kuliah WHERE kode_mk IN ($placeholders)";
+        $stmt_new = $koneksi->prepare($sql_new_sks);
+        $stmt_new->execute($matkul_dipilih); // execute accepts array for indexed placeholders
+        $row_new = $stmt_new->fetch(PDO::FETCH_ASSOC);
+        $sks_baru = (int)($row_new['total_sks_baru'] ?? 0);
 
         // 3. Cek Batas
         $total_sks_nanti = $sks_existing + $sks_baru;
@@ -79,36 +83,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $error_count = 0;
             
             // Siapkan statement INSERT sekali saja di luar loop
-            $stmt_insert = mysqli_prepare($koneksi, "INSERT IGNORE INTO krs (nim_mahasiswa, kode_matkul, semester) VALUES (?, ?, ?)");
+            // Use simple INSERT and try-catch for duplicates
+            $stmt_insert = $koneksi->prepare("INSERT INTO krs (nim_mahasiswa, kode_matkul, semester) VALUES (:nim, :kode, :sem)");
             
-            if ($stmt_insert) {
-                foreach ($matkul_dipilih as $kode_mk) {
-                    // $kode_mk dari POST sudah aman jika dibind, tapi validasi tetap baik
-                    
-                    mysqli_stmt_bind_param($stmt_insert, "sss", $nim, $kode_mk, $semester_aktif);
-                    
-                    if (mysqli_stmt_execute($stmt_insert)) {
-                        // Cek apakah benar-benar ada baris yang bertambah (karena IGNORE)
-                        // Note: mysqli_stmt_affected_rows kadang return -1 kalau error, atau 0 kalau ignore.
-                        // Di sini kita asumsikan execute sukses = OK.
-                        if (mysqli_stmt_affected_rows($stmt_insert) > 0) {
-                            $sukses_count++;
-                        }
+            foreach ($matkul_dipilih as $kode_mk) {
+                try {
+                    $stmt_insert->execute([
+                        ':nim' => $nim, 
+                        ':kode' => $kode_mk, 
+                        ':sem' => $semester_aktif
+                    ]);
+                    $sukses_count++;
+                } catch (PDOException $e) {
+                    // Check for duplicate key error (SQLSTATE 23000)
+                    if ($e->getCode() == '23000') {
+                        // Ignore duplicate
                     } else {
+                         // Real error
                         $error_count++;
                     }
                 }
-                mysqli_stmt_close($stmt_insert);
             }
             
             if ($sukses_count > 0) {
                 $pesan = "Berhasil mengambil $sukses_count mata kuliah. Total SKS Anda sekarang: $total_sks_nanti/$max_sks.";
                 $pesan_tipe = "success";
             } else if ($error_count > 0) {
-                $pesan = "Gagal mengambil mata kuliah.";
+                $pesan = "Gagal mengambil beberapa mata kuliah (atau error database).";
                 $pesan_tipe = "warning";
             } else {
-                $pesan = "Mata kuliah sudah diambil sebelumnya.";
+                $pesan = "Mata kuliah sudah diambil sebelumnya (tidak ada perubahan).";
                 $pesan_tipe = "info";
             }
         }
@@ -122,19 +126,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 // --- BAGIAN 2: DATA MATA KULIAH & KRS SAAT INI ---
 
 // Ambil semua mata kuliah
-$sql_mk = "SELECT * FROM mata_kuliah ORDER BY semester, nama_mk";
-$hasil_mk = mysqli_query($koneksi, $sql_mk);
+try {
+    $sql_mk = "SELECT * FROM mata_kuliah ORDER BY semester, nama_mk";
+    $stmt_mk = $koneksi->query($sql_mk);
+    $hasil_mk = $stmt_mk->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+     $hasil_mk = [];
+}
 
 // Ambil mata kuliah yang SUDAH diambil mahasiswa ini di semester ini
-$sql_krs_taken = "SELECT k.kode_matkul, m.sks FROM krs k JOIN mata_kuliah m ON k.kode_matkul = m.kode_mk WHERE k.nim_mahasiswa = ? AND k.semester = ?";
-$stmt_taken = mysqli_prepare($koneksi, $sql_krs_taken);
-mysqli_stmt_bind_param($stmt_taken, "ss", $nim, $semester_aktif);
-mysqli_stmt_execute($stmt_taken);
-$hasil_krs = mysqli_stmt_get_result($stmt_taken);
+$sql_krs_taken = "SELECT k.kode_matkul, m.sks FROM krs k JOIN mata_kuliah m ON k.kode_matkul = m.kode_mk WHERE k.nim_mahasiswa = :nim AND k.semester = :sem";
+$stmt_taken = $koneksi->prepare($sql_krs_taken);
+$stmt_taken->execute([':nim' => $nim, ':sem' => $semester_aktif]);
+$hasil_krs = $stmt_taken->fetchAll(PDO::FETCH_ASSOC);
 
 $mk_taken = [];
 $total_sks_diambil = 0;
-while ($row = mysqli_fetch_assoc($hasil_krs)) {
+foreach ($hasil_krs as $row) {
     $mk_taken[] = $row['kode_matkul'];
     $total_sks_diambil += $row['sks'];
 }
@@ -233,8 +241,8 @@ include 'header.php';
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
                                 <?php
-                                if (mysqli_num_rows($hasil_mk) > 0) {
-                                    while ($mk = mysqli_fetch_assoc($hasil_mk)) {
+                                if (count($hasil_mk) > 0) {
+                                    foreach ($hasil_mk as $mk) {
                                         $kode = $mk['kode_mk'];
                                         $is_taken = in_array($kode, $mk_taken);
                                         $row_class = $is_taken ? 'bg-green-50' : 'hover:bg-gray-50'; // Use Tailwind classes
@@ -299,5 +307,5 @@ include 'header.php';
 
 <?php 
 include 'footer.php';
-mysqli_close($koneksi); 
+// No close needed
 ?>

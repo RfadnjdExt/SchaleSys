@@ -30,19 +30,26 @@ if (isset($_GET['status'])) {
 }
 
 // Ambil data mata kuliah
-if ($_SESSION['role'] == 'dosen') {
-    // Jika Dosen, hanya tampilkan mata kuliah yang diajarkan
-    $nip = $_SESSION['nip'];
-    $sql = "SELECT mk.* 
-            FROM mata_kuliah mk
-            JOIN dosen_pengampu dp ON mk.kode_mk = dp.kode_matkul
-            WHERE dp.nip_dosen = '$nip'
-            ORDER BY mk.semester, mk.nama_mk";
-} else {
-    // Jika Admin, tampilkan semua
-    $sql = "SELECT * FROM mata_kuliah ORDER BY semester, nama_mk";
+try {
+    if ($_SESSION['role'] == 'dosen') {
+        // Jika Dosen, hanya tampilkan mata kuliah yang diajarkan
+        $nip = $_SESSION['nip'];
+        $sql = "SELECT mk.* 
+                FROM mata_kuliah mk
+                JOIN dosen_pengampu dp ON mk.kode_mk = dp.kode_matkul
+                WHERE dp.nip_dosen = :nip
+                ORDER BY mk.semester, mk.nama_mk";
+        $stmt = $koneksi->prepare($sql);
+        $stmt->execute([':nip' => $nip]);
+    } else {
+        // Jika Admin, tampilkan semua
+        $sql = "SELECT * FROM mata_kuliah ORDER BY semester, nama_mk";
+        $stmt = $koneksi->query($sql);
+    }
+    $hasil = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    die("Error fetching data: " . $e->getMessage());
 }
-$hasil = mysqli_query($koneksi, $sql);
 
 $page_title = "Daftar Mata Kuliah";
 include 'header.php'; 
@@ -85,8 +92,8 @@ include 'header.php';
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
                         <?php
-                        if (mysqli_num_rows($hasil) > 0) {
-                            while ($data = mysqli_fetch_assoc($hasil)) {
+                        if (count($hasil) > 0) {
+                            foreach ($hasil as $data) {
                                 echo "<tr class='hover:bg-gray-50 transition-colors duration-150'>";
                                 echo "<td class='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900'>" . htmlspecialchars($data['kode_mk']) . "</td>";
                                 echo "<td class='px-6 py-4 whitespace-nowrap text-sm text-gray-700'>" . htmlspecialchars($data['nama_mk']) . "</td>";
@@ -115,4 +122,4 @@ include 'header.php';
     </div>
 
 <?php include 'footer.php'; ?>
-<?php mysqli_close($koneksi); ?>
+<?php // No close needed ?>

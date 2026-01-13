@@ -16,9 +16,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     verify_csrf_token();
     
     // Ambil dan bersihkan data dari form
-    $nim_mahasiswa = mysqli_real_escape_string($koneksi, $_POST['nim_mahasiswa']);
-    $kode_matkul = mysqli_real_escape_string($koneksi, $_POST['kode_matkul']);
-    $nilai_huruf = strtoupper(mysqli_real_escape_string($koneksi, $_POST['nilai_huruf'])); // Ubah nilai jadi huruf besar
+    $nim_mahasiswa = $_POST['nim_mahasiswa'];
+    $kode_matkul = $_POST['kode_matkul'];
+    $nilai_huruf = strtoupper($_POST['nilai_huruf']); // Ubah nilai jadi huruf besar
 
     // Validasi dasar
     if (!empty($nim_mahasiswa) && !empty($kode_matkul) && !empty($nilai_huruf)) {
@@ -30,36 +30,37 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $pesan_tipe = "warning";
         } else {
             // --- CEK KRS TERLEBIH DAHULU (Prepared Statement) ---
-        include 'config_semester.php';
-        $semester_aktif = get_active_semester($koneksi); 
-        
-        $stmt_cek = mysqli_prepare($koneksi, "SELECT * FROM krs WHERE nim_mahasiswa = ? AND kode_matkul = ? AND semester = ?");
-        mysqli_stmt_bind_param($stmt_cek, "sss", $nim_mahasiswa, $kode_matkul, $semester_aktif);
-        mysqli_stmt_execute($stmt_cek);
-        $res_cek = mysqli_stmt_get_result($stmt_cek);
-        
-        if (mysqli_num_rows($res_cek) == 0) {
-            $pesan = "Gagal: Mahasiswa ini belum mengambil mata kuliah tersebut di KRS semester ini.";
-            $pesan_tipe = "danger";
-        } else {
-            // Jika ada di KRS, baru boleh input nilai
-             
-            // Buat kueri INSERT (Prepared Statement)
-            $stmt_insert = mysqli_prepare($koneksi, "INSERT INTO nilai (nim_mahasiswa, kode_matkul, nilai_huruf) VALUES (?, ?, ?)");
-            mysqli_stmt_bind_param($stmt_insert, "sss", $nim_mahasiswa, $kode_matkul, $nilai_huruf);
+            include 'config_semester.php';
+            $semester_aktif = get_active_semester($koneksi); 
             
-            // Jalankan kueri
-            if (mysqli_stmt_execute($stmt_insert)) {
-                $pesan = "Nilai berhasil ditambahkan!";
-                $pesan_tipe = "success";
-            } else {
-                $pesan = "Error: " . mysqli_error($koneksi);
-                $pesan_tipe = "danger";
+            try {
+                $stmt_cek = $koneksi->prepare("SELECT * FROM krs WHERE nim_mahasiswa = ? AND kode_matkul = ? AND semester = ?");
+                $stmt_cek->execute([$nim_mahasiswa, $kode_matkul, $semester_aktif]);
+                
+                if ($stmt_cek->rowCount() == 0) {
+                    $pesan = "Gagal: Mahasiswa ini belum mengambil mata kuliah tersebut di KRS semester ini ($semester_aktif).";
+                    $pesan_tipe = "danger";
+                } else {
+                    // Jika ada di KRS, baru boleh input nilai
+                     
+                    // Buat kueri INSERT (Prepared Statement)
+                    $stmt_insert = $koneksi->prepare("INSERT INTO nilai (nim_mahasiswa, kode_matkul, nilai_huruf) VALUES (?, ?, ?)");
+                    
+                    // Jalankan kueri
+                    if ($stmt_insert->execute([$nim_mahasiswa, $kode_matkul, $nilai_huruf])) {
+                        $pesan = "Nilai berhasil ditambahkan!";
+                        $pesan_tipe = "success";
+                    } else {
+                        $pesan = "Error insert data.";
+                        $pesan_tipe = "danger";
+                    }
+                }
+            } catch (PDOException $e) {
+                // Tangkap error duplicate entry dll
+                 $pesan = "Error: " . $e->getMessage();
+                 $pesan_tipe = "danger";
             }
-            mysqli_stmt_close($stmt_insert);
-        }
-        mysqli_stmt_close($stmt_cek);
-        
+            
         } // End else validasi nilai huruf
 
     } else {
@@ -104,10 +105,13 @@ include 'header.php';
                         <select id="nim_mahasiswa" name="nim_mahasiswa" class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 py-2 px-3 bg-white" required>
                             <option value="">-- Pilih Mahasiswa --</option>
                             <?php
-                                $sql_mhs = "SELECT nim, nama_mahasiswa FROM mahasiswa ORDER BY nama_mahasiswa";
-                                $hasil_mhs = mysqli_query($koneksi, $sql_mhs);
-                                while ($mhs = mysqli_fetch_assoc($hasil_mhs)) {
-                                    echo "<option value='" . $mhs['nim'] . "'>" . htmlspecialchars($mhs['nim'] . " - " . $mhs['nama_mahasiswa']) . "</option>";
+                                try {
+                                    $stmt = $koneksi->query("SELECT nim, nama_mahasiswa FROM mahasiswa ORDER BY nama_mahasiswa");
+                                    while ($mhs = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                                        echo "<option value='" . $mhs['nim'] . "'>" . htmlspecialchars($mhs['nim'] . " - " . $mhs['nama_mahasiswa']) . "</option>";
+                                    }
+                                } catch (PDOException $e) {
+                                    // Ignore
                                 }
                             ?>
                         </select>
@@ -119,20 +123,30 @@ include 'header.php';
                             <option value="">-- Pilih Mata Kuliah --</option>
                             <?php
                                 $sql_mk = "";
+                                $params_mk = [];
+                                
                                 if ($_SESSION['role'] == 'admin') {
                                     $sql_mk = "SELECT kode_mk, nama_mk FROM mata_kuliah ORDER BY nama_mk";
                                 } else if ($_SESSION['role'] == 'dosen') {
                                     $nip_dosen_login = $_SESSION['nip'];
-                                    $sql_mk = "SELECT mk.kode_mk, mk.nama_mk FROM mata_kuliah mk JOIN dosen_pengampu dp ON mk.kode_mk = dp.kode_matkul WHERE dp.nip_dosen = '$nip_dosen_login' ORDER BY mk.nama_mk";
+                                    $sql_mk = "SELECT mk.kode_mk, mk.nama_mk FROM mata_kuliah mk JOIN dosen_pengampu dp ON mk.kode_mk = dp.kode_matkul WHERE dp.nip_dosen = ? ORDER BY mk.nama_mk";
+                                    $params_mk = [$nip_dosen_login];
                                 }
-                                $hasil_mk = mysqli_query($koneksi, $sql_mk);
+                                
+                                try {
+                                    $stmt_mk = $koneksi->prepare($sql_mk);
+                                    $stmt_mk->execute($params_mk);
+                                    $hasil_mk = $stmt_mk->fetchAll(PDO::FETCH_ASSOC);
 
-                                if (mysqli_num_rows($hasil_mk) > 0) {
-                                    while ($mk = mysqli_fetch_assoc($hasil_mk)) {
-                                        echo "<option value='" . $mk['kode_mk'] . "'>" . htmlspecialchars($mk['kode_mk'] . " - " . $mk['nama_mk']) . "</option>";
+                                    if (count($hasil_mk) > 0) {
+                                        foreach ($hasil_mk as $mk) {
+                                            echo "<option value='" . $mk['kode_mk'] . "'>" . htmlspecialchars($mk['kode_mk'] . " - " . $mk['nama_mk']) . "</option>";
+                                        }
+                                    } else if ($_SESSION['role'] == 'dosen') {
+                                        echo "<option value='' disabled>Anda belum ditugaskan mengampu mata kuliah apapun.</option>";
                                     }
-                                } else if ($_SESSION['role'] == 'dosen') {
-                                    echo "<option value='' disabled>Anda belum ditugaskan mengampu mata kuliah apapun.</option>";
+                                } catch (PDOException $e) {
+                                    // Ignore
                                 }
                             ?>
                         </select>
@@ -160,5 +174,5 @@ include 'header.php';
 <?php
 include 'footer.php';
 // Tutup koneksi di akhir
-mysqli_close($koneksi);
+// $koneksi auto-close
 ?>

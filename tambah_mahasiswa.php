@@ -16,13 +16,15 @@ $pesan_tipe = ''; // Untuk menentukan warna alert (sukses/gagal)
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     // Ambil dan bersihkan data dari form
-    $nim = mysqli_real_escape_string($koneksi, $_POST['nim']);
-    $nama_mahasiswa = mysqli_real_escape_string($koneksi, $_POST['nama_mahasiswa']);
-    $fakultas = mysqli_real_escape_string($koneksi, $_POST['fakultas']);
-    $prodi = mysqli_real_escape_string($koneksi, $_POST['prodi']);
-    $angkatan = mysqli_real_escape_string($koneksi, $_POST['angkatan']);
-    $foto = mysqli_real_escape_string($koneksi, $_POST['foto']);
-    $dosen_wali_id = mysqli_real_escape_string($koneksi, $_POST['dosen_wali_id']);
+    $nim = $_POST['nim'];
+    $nama_mahasiswa = $_POST['nama_mahasiswa'];
+    $fakultas = $_POST['fakultas'];
+    $prodi = $_POST['prodi'];
+    $angkatan = $_POST['angkatan'];
+    $foto = $_POST['foto'];
+    
+    // Handle optional Dosen Wali
+    $dosen_wali_id = !empty($_POST['dosen_wali_id']) ? $_POST['dosen_wali_id'] : null;
 
     // Validasi dasar (pastikan NIM, nama, prodi, dan angkatan tidak kosong)
     if (!empty($nim) && !empty($nama_mahasiswa) && !empty($prodi) && !empty($angkatan) && !empty($fakultas)) {
@@ -38,27 +40,37 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $pesan_tipe = "warning";
         }
         else {
-            // Lanjut proses insert
-        // Buat kueri INSERT
-        // Jika dosen wali tidak dipilih (kosong), masukkan NULL
-        $dosen_wali_sql = !empty($dosen_wali_id) ? "'$dosen_wali_id'" : "NULL";
-        
-        $sql = "INSERT INTO mahasiswa (nim, nama_mahasiswa, fakultas, prodi, angkatan, foto, dosen_wali_id) 
-                VALUES ('$nim', '$nama_mahasiswa', '$fakultas', '$prodi', '$angkatan', '$foto', $dosen_wali_sql)";
-        
-        // Jalankan kueri
-        if (mysqli_query($koneksi, $sql)) {
-            $pesan = "Mahasiswa baru berhasil ditambahkan!";
-            $pesan_tipe = "success";
-        } else {
-            // Cek jika error karena duplikat NIM
-            if (mysqli_errno($koneksi) == 1062) {
-                $pesan = "Error: NIM '$nim' sudah terdaftar. Gunakan NIM lain.";
-            } else {
-                $pesan = "Error: " . mysqli_error($koneksi);
+            try {
+                // Buat kueri INSERT dengan Prepared Statement
+                $sql = "INSERT INTO mahasiswa (nim, nama_mahasiswa, fakultas, prodi, angkatan, foto, dosen_wali_id) 
+                        VALUES (:nim, :nama, :fakultas, :prodi, :angkatan, :foto, :dosen_wali)";
+                
+                $stmt = $koneksi->prepare($sql);
+                
+                $params = [
+                    ':nim' => $nim,
+                    ':nama' => $nama_mahasiswa,
+                    ':fakultas' => $fakultas,
+                    ':prodi' => $prodi,
+                    ':angkatan' => $angkatan,
+                    ':foto' => $foto,
+                    ':dosen_wali' => $dosen_wali_id
+                ];
+
+                // Jalankan kueri
+                if ($stmt->execute($params)) {
+                    $pesan = "Mahasiswa baru berhasil ditambahkan!";
+                    $pesan_tipe = "success";
+                }
+            } catch (PDOException $e) {
+                // Cek jika error karena duplikat NIM (Error 23000 is integrity constraint violation)
+                if ($e->getCode() == '23000') {
+                     $pesan = "Error: NIM '$nim' sudah terdaftar. Gunakan NIM lain.";
+                } else {
+                    $pesan = "Error: " . $e->getMessage();
+                }
+                $pesan_tipe = "danger";
             }
-            $pesan_tipe = "danger";
-        }
         
         } // End else validasi NIM
 
@@ -130,10 +142,9 @@ include 'header.php';
                             <option value="">-- Tidak Ada --</option>
                             <?php
                                 // Ambil data dosen untuk dropdown
-                                $sql_dosen = "SELECT nip, nama_dosen FROM dosen ORDER BY nama_dosen";
-                                $hasil_dosen = mysqli_query($koneksi, $sql_dosen);
-                                while ($dosen = mysqli_fetch_assoc($hasil_dosen)) {
-                                    echo "<option value='" . $dosen['nip'] . "'>" . htmlspecialchars($dosen['nama_dosen']) . "</option>";
+                                $stmt_dosen = $koneksi->query("SELECT nip, nama_dosen FROM dosen ORDER BY nama_dosen");
+                                while ($dosen = $stmt_dosen->fetch(PDO::FETCH_ASSOC)) {
+                                    echo "<option value='" . htmlspecialchars($dosen['nip']) . "'>" . htmlspecialchars($dosen['nama_dosen']) . "</option>";
                                 }
                             ?>
                         </select>
@@ -153,7 +164,4 @@ include 'header.php';
     </div>
 
 <?php include 'footer.php'; ?>
-<?php
-// Tutup koneksi di akhir
-mysqli_close($koneksi);
-?>
+<?php // No close needed ?>

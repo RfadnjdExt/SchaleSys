@@ -8,16 +8,20 @@ if (!isset($_GET['nim']) || empty($_GET['nim'])) {
 }
 
 // Ambil NIM dari URL dan bersihkan dari karakter berbahaya
-$nim_mahasiswa = mysqli_real_escape_string($koneksi, $_GET['nim']);
+$nim_mahasiswa = $_GET['nim'];
 
-// --- QUERY 1: Ambil data biodata mahasiswa ---
-$sql_biodata = "SELECT nama_mahasiswa, prodi FROM mahasiswa WHERE nim = '$nim_mahasiswa'";
-$hasil_biodata = mysqli_query($koneksi, $sql_biodata);
-$biodata = mysqli_fetch_assoc($hasil_biodata);
+try {
+    // --- QUERY 1: Ambil data biodata mahasiswa ---
+    $stmt_bio = $koneksi->prepare("SELECT nama_mahasiswa, prodi FROM mahasiswa WHERE nim = ?");
+    $stmt_bio->execute([$nim_mahasiswa]);
+    $biodata = $stmt_bio->fetch(PDO::FETCH_ASSOC);
 
-// Jika mahasiswa dengan NIM tersebut tidak ditemukan
-if (!$biodata) {
-    die("<h1>Error: Mahasiswa dengan NIM $nim_mahasiswa tidak ditemukan.</h1>");
+    // Jika mahasiswa dengan NIM tersebut tidak ditemukan
+    if (!$biodata) {
+        die("<h1>Error: Mahasiswa dengan NIM " . htmlspecialchars($nim_mahasiswa) . " tidak ditemukan.</h1>");
+    }
+} catch (PDOException $e) {
+    die("Error Database: " . $e->getMessage());
 }
 
 $page_title = "Transkrip Nilai - " . htmlspecialchars($biodata['nama_mahasiswa']);
@@ -66,47 +70,53 @@ $page_title = "Transkrip Nilai - " . htmlspecialchars($biodata['nama_mahasiswa']
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
                         <?php
-                        // --- QUERY 2: Ambil data nilai ---
-                        $sql_nilai = "SELECT mk.kode_mk, mk.nama_mk, mk.sks, n.nilai_huruf
-                                      FROM nilai n
-                                      JOIN mata_kuliah mk ON n.kode_matkul = mk.kode_mk
-                                      WHERE n.nim_mahasiswa = '$nim_mahasiswa'
-                                      ORDER BY mk.semester ASC";
-                        
-                        $hasil_nilai = mysqli_query($koneksi, $sql_nilai);
+                        try {
+                            // --- QUERY 2: Ambil data nilai ---
+                            $sql_nilai = "SELECT mk.kode_mk, mk.nama_mk, mk.sks, n.nilai_huruf
+                                          FROM nilai n
+                                          JOIN mata_kuliah mk ON n.kode_matkul = mk.kode_mk
+                                          WHERE n.nim_mahasiswa = :nim
+                                          ORDER BY mk.semester ASC";
+                            
+                            $stmt_nilai = $koneksi->prepare($sql_nilai);
+                            $stmt_nilai->execute([':nim' => $nim_mahasiswa]);
+                            $hasil_nilai = $stmt_nilai->fetchAll(PDO::FETCH_ASSOC);
 
-                        $total_sks = 0;
-                        $total_bobot_kali_sks = 0;
+                            $total_sks = 0;
+                            $total_bobot_kali_sks = 0;
 
-                        if (mysqli_num_rows($hasil_nilai) > 0) {
-                            while ($data = mysqli_fetch_assoc($hasil_nilai)) {
-                                $bobot = 0;
-                                switch ($data['nilai_huruf']) {
-                                    case 'A': $bobot = 4; break;
-                                    case 'B': $bobot = 3; break;
-                                    case 'C': $bobot = 2; break;
-                                    case 'D': $bobot = 1; break;
-                                    default:  $bobot = 0; break;
+                            if (count($hasil_nilai) > 0) {
+                                foreach ($hasil_nilai as $data) {
+                                    $bobot = 0;
+                                    switch ($data['nilai_huruf']) {
+                                        case 'A': $bobot = 4; break;
+                                        case 'B': $bobot = 3; break;
+                                        case 'C': $bobot = 2; break;
+                                        case 'D': $bobot = 1; break;
+                                        default:  $bobot = 0; break;
+                                    }
+
+                                    $sks_kali_bobot = $data['sks'] * $bobot;
+                                    $total_sks += $data['sks'];
+                                    $total_bobot_kali_sks += $sks_kali_bobot;
+
+                                    echo "<tr class='hover:bg-gray-50 transition-colors'>";
+                                    echo "<td class='px-6 py-4 whitespace-nowrap text-sm text-gray-500 font-mono'>{$data['kode_mk']}</td>";
+                                    echo "<td class='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900'>{$data['nama_mk']}</td>";
+                                    echo "<td class='px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500'>{$data['sks']}</td>";
+                                    
+                                    $gradeColor = $data['nilai_huruf'] == 'A' ? 'text-green-600 font-bold' : ($data['nilai_huruf'] == 'B' ? 'text-blue-600' : ($data['nilai_huruf'] == 'C' ? 'text-yellow-600' : 'text-red-600'));
+                                    echo "<td class='px-6 py-4 whitespace-nowrap text-center text-sm {$gradeColor}'>{$data['nilai_huruf']}</td>";
+                                    
+                                    echo "<td class='px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500'>{$bobot}</td>";
+                                    echo "<td class='px-6 py-4 whitespace-nowrap text-center text-sm font-semibold text-gray-700'>{$sks_kali_bobot}</td>";
+                                    echo "</tr>";
                                 }
-
-                                $sks_kali_bobot = $data['sks'] * $bobot;
-                                $total_sks += $data['sks'];
-                                $total_bobot_kali_sks += $sks_kali_bobot;
-
-                                echo "<tr class='hover:bg-gray-50 transition-colors'>";
-                                echo "<td class='px-6 py-4 whitespace-nowrap text-sm text-gray-500 font-mono'>{$data['kode_mk']}</td>";
-                                echo "<td class='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900'>{$data['nama_mk']}</td>";
-                                echo "<td class='px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500'>{$data['sks']}</td>";
-                                
-                                $gradeColor = $data['nilai_huruf'] == 'A' ? 'text-green-600 font-bold' : ($data['nilai_huruf'] == 'B' ? 'text-blue-600' : ($data['nilai_huruf'] == 'C' ? 'text-yellow-600' : 'text-red-600'));
-                                echo "<td class='px-6 py-4 whitespace-nowrap text-center text-sm {$gradeColor}'>{$data['nilai_huruf']}</td>";
-                                
-                                echo "<td class='px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500'>{$bobot}</td>";
-                                echo "<td class='px-6 py-4 whitespace-nowrap text-center text-sm font-semibold text-gray-700'>{$sks_kali_bobot}</td>";
-                                echo "</tr>";
+                            } else {
+                                echo "<tr><td colspan='6' class='px-6 py-8 text-center text-gray-500 italic'>Belum ada data nilai.</td></tr>";
                             }
-                        } else {
-                            echo "<tr><td colspan='6' class='px-6 py-8 text-center text-gray-500 italic'>Belum ada data nilai.</td></tr>";
+                        } catch (PDOException $e) {
+                            echo "<tr><td colspan='6' class='px-6 py-8 text-center text-red-500 italic'>Error: " . $e->getMessage() . "</td></tr>";
                         }
                         ?>
                     </tbody>
@@ -146,7 +156,4 @@ $page_title = "Transkrip Nilai - " . htmlspecialchars($biodata['nama_mahasiswa']
     </div>
 
 <?php include 'footer.php'; ?>
-<?php
-// Tutup koneksi database
-mysqli_close($koneksi);
-?>
+<?php // No close needed ?>

@@ -10,8 +10,8 @@ if (!isset($_GET['nim']) || empty($_GET['nim'])) {
     exit; // Hentikan eksekusi skrip
 }
 
-// 3. Ambil NIM dari URL dan bersihkan
-$nim_mahasiswa = mysqli_real_escape_string($koneksi, $_GET['nim']);
+// 3. Ambil NIM dari URL
+$nim_mahasiswa = $_GET['nim'];
 
 // 4. Buat kueri SQL untuk menghitung IPK secara langsung
 $sql_ipk = "
@@ -33,30 +33,35 @@ $sql_ipk = "
     JOIN
         mata_kuliah mk ON n.kode_matkul = mk.kode_mk
     WHERE
-        n.nim_mahasiswa = '$nim_mahasiswa'
+        n.nim_mahasiswa = :nim
 ";
 
-// 5. Jalankan kueri
-$hasil = mysqli_query($koneksi, $sql_ipk);
-$data_ipk = mysqli_fetch_assoc($hasil);
+try {
+    // 5. Jalankan kueri
+    $stmt = $koneksi->prepare($sql_ipk);
+    $stmt->execute([':nim' => $nim_mahasiswa]);
+    $data_ipk = $stmt->fetch(PDO::FETCH_ASSOC);
 
-// 6. Lakukan perhitungan IPK
-$ipk = 0;
-// Pastikan total_sks tidak null dan tidak 0 untuk menghindari error pembagian
-if ($data_ipk && $data_ipk['total_sks'] > 0) {
-    $ipk = $data_ipk['total_bobot_sks'] / $data_ipk['total_sks'];
+    // 6. Lakukan perhitungan IPK
+    $ipk = 0;
+    // Pastikan total_sks tidak null dan tidak 0 untuk menghindari error pembagian
+    if ($data_ipk && $data_ipk['total_sks'] > 0) {
+        $ipk = $data_ipk['total_bobot_sks'] / $data_ipk['total_sks'];
+    }
+
+    // 7. Siapkan output dalam format array
+    $output = [
+        'nim' => $nim_mahasiswa,
+        'total_sks_diambil' => (int) ($data_ipk['total_sks'] ?? 0),
+        'ipk' => round($ipk, 2) // Bulatkan IPK menjadi 2 desimal
+    ];
+
+    // 8. Tampilkan hasil dalam format JSON
+    echo json_encode($output);
+
+} catch (PDOException $e) {
+    echo json_encode(['error' => 'Database error: ' . $e->getMessage()]);
 }
 
-// 7. Siapkan output dalam format array
-$output = [
-    'nim' => $nim_mahasiswa,
-    'total_sks_diambil' => (int) $data_ipk['total_sks'],
-    'ipk' => round($ipk, 2) // Bulatkan IPK menjadi 2 desimal
-];
-
-// 8. Tampilkan hasil dalam format JSON
-echo json_encode($output);
-
-// 9. Tutup koneksi
-mysqli_close($koneksi);
+// 9. Tutup koneksi - tidak perlu explicit close untuk PDO, terjadi otomatis saat script selesai
 ?>

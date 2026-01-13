@@ -13,6 +13,7 @@ $sks = '';
 $semester = '';
 
 // --- BAGIAN 1: PROSES UPDATE (JIKA FORM DISUBMIT) ---
+// --- BAGIAN 1: PROSES UPDATE (JIKA FORM DISUBMIT) ---
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     // Verifikasi CSRF Token
@@ -25,37 +26,50 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $ruangan = '';
 
     // Ambil semua data dari form
-    $kode_mk = mysqli_real_escape_string($koneksi, $_POST['kode_mk']);
-    $nama_mk = mysqli_real_escape_string($koneksi, $_POST['nama_mk']);
+    $kode_mk = $_POST['kode_mk'];
+    $nama_mk = $_POST['nama_mk'];
     $sks = (int)$_POST['sks'];
     $semester = (int)$_POST['semester'];
     
     // Data Jadwal
-    $hari = mysqli_real_escape_string($koneksi, $_POST['hari']);
-    $jam_mulai = mysqli_real_escape_string($koneksi, $_POST['jam_mulai']);
-    $jam_selesai = mysqli_real_escape_string($koneksi, $_POST['jam_selesai']);
-    $ruangan = mysqli_real_escape_string($koneksi, $_POST['ruangan']);
+    $hari = $_POST['hari'];
+    $jam_mulai = $_POST['jam_mulai'];
+    $jam_selesai = $_POST['jam_selesai'];
+    $ruangan = $_POST['ruangan'];
 
     // Validasi
     if (!empty($kode_mk) && !empty($nama_mk) && $sks > 0 && $semester > 0) {
         
-        // Buat kueri UPDATE
-        $sql = "UPDATE mata_kuliah 
-                SET nama_mk = '$nama_mk', 
-                    sks = $sks, 
-                    semester = $semester,
-                    hari = '$hari',
-                    jam_mulai = '$jam_mulai',
-                    jam_selesai = '$jam_selesai',
-                    ruangan = '$ruangan'
-                WHERE kode_mk = '$kode_mk'";
-        
-        // Jalankan kueri
-        if (mysqli_query($koneksi, $sql)) {
-            header("Location: tampil_matakuliah.php?status=update_sukses");
-            exit;
-        } else {
-            $pesan = "Error saat mengupdate data: " . mysqli_error($koneksi);
+        try {
+            // Buat kueri UPDATE
+            $sql = "UPDATE mata_kuliah 
+                    SET nama_mk = :nama, 
+                        sks = :sks, 
+                        semester = :smt,
+                        hari = :hari,
+                        jam_mulai = :mulai,
+                        jam_selesai = :selesai,
+                        ruangan = :ruangan
+                    WHERE kode_mk = :kode";
+            
+            $stmt = $koneksi->prepare($sql);
+            
+            // Jalankan kueri
+            if ($stmt->execute([
+                ':nama' => $nama_mk,
+                ':sks' => $sks,
+                ':smt' => $semester,
+                ':hari' => $hari,
+                ':mulai' => $jam_mulai,
+                ':selesai' => $jam_selesai,
+                ':ruangan' => $ruangan,
+                ':kode' => $kode_mk
+            ])) {
+                header("Location: tampil_matakuliah.php?status=update_sukses");
+                exit;
+            }
+        } catch (PDOException $e) {
+            $pesan = "Error saat mengupdate data: " . $e->getMessage();
             $pesan_tipe = "danger";
         }
     } else {
@@ -66,24 +80,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 // --- BAGIAN 2: TAMPILKAN FORM (JIKA HALAMAN DIBUKA BIASA) ---
 else if (isset($_GET['kode']) && !empty($_GET['kode'])) {
     
-    $kode_mk = mysqli_real_escape_string($koneksi, $_GET['kode']);
+    $kode_mk = $_GET['kode'];
     
-    // Ambil data MK yang sekarang berdasarkan Kode MK
-    $sql_current = "SELECT * FROM mata_kuliah WHERE kode_mk = '$kode_mk'";
-    $hasil_current = mysqli_query($koneksi, $sql_current);
-    
-    if (mysqli_num_rows($hasil_current) == 1) {
-        $data = mysqli_fetch_assoc($hasil_current);
-        $nama_mk = $data['nama_mk'];
-        $sks = $data['sks'];
-        $semester = $data['semester'];
-        // Jadwal
-        $hari = $data['hari'];
-        $jam_mulai = $data['jam_mulai'];
-        $jam_selesai = $data['jam_selesai'];
-        $ruangan = $data['ruangan'];
-    } else {
-        die("Error: Data mata kuliah tidak ditemukan.");
+    try {
+        // Ambil data MK yang sekarang berdasarkan Kode MK
+        $stmt_current = $koneksi->prepare("SELECT * FROM mata_kuliah WHERE kode_mk = ?");
+        $stmt_current->execute([$kode_mk]);
+        $data = $stmt_current->fetch(PDO::FETCH_ASSOC);
+        
+        if ($data) {
+            $nama_mk = $data['nama_mk'];
+            $sks = $data['sks'];
+            $semester = $data['semester'];
+            // Jadwal
+            $hari = $data['hari'];
+            $jam_mulai = $data['jam_mulai'];
+            $jam_selesai = $data['jam_selesai'];
+            $ruangan = $data['ruangan'];
+        } else {
+            die("Error: Data mata kuliah tidak ditemukan.");
+        }
+    } catch (PDOException $e) {
+         die("Error fetching data: " . $e->getMessage());
     }
 
 } else {

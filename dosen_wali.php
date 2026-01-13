@@ -10,17 +10,28 @@ include 'koneksi.php';
 $nip_dosen_wali = $_SESSION['nip'];
 
 // 3. Ambil data Dosen itu sendiri (untuk judul halaman)
-$sql_dosen = "SELECT nama_dosen FROM dosen WHERE nip = '$nip_dosen_wali'";
-$hasil_dosen = mysqli_query($koneksi, $sql_dosen);
-$data_dosen = mysqli_fetch_assoc($hasil_dosen);
-$nama_dosen = $data_dosen ? $data_dosen['nama_dosen'] : 'Dosen';
+try {
+    $stmt_dosen = $koneksi->prepare("SELECT nama_dosen FROM dosen WHERE nip = ?");
+    $stmt_dosen->execute([$nip_dosen_wali]);
+    $data_dosen = $stmt_dosen->fetch(PDO::FETCH_ASSOC);
+    $nama_dosen = $data_dosen ? $data_dosen['nama_dosen'] : 'Dosen';
+} catch (PDOException $e) {
+    $nama_dosen = 'Dosen';
+}
 
 // 4. Ambil daftar mahasiswa perwalian
-$sql_mahasiswa = "SELECT nim, nama_mahasiswa, prodi, angkatan 
-                  FROM mahasiswa 
-                  WHERE dosen_wali_id = '$nip_dosen_wali' 
-                  ORDER BY angkatan DESC, nama_mahasiswa ASC";
-$hasil_mahasiswa = mysqli_query($koneksi, $sql_mahasiswa);
+try {
+    $sql_mahasiswa = "SELECT nim, nama_mahasiswa, prodi, angkatan 
+                      FROM mahasiswa 
+                      WHERE dosen_wali_id = :nip 
+                      ORDER BY angkatan DESC, nama_mahasiswa ASC";
+    $stmt_mhs = $koneksi->prepare($sql_mahasiswa);
+    $stmt_mhs->execute([':nip' => $nip_dosen_wali]);
+    $hasil_mahasiswa = $stmt_mhs->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    $hasil_mahasiswa = [];
+}
+
 
 $page_title = "Dasbor Dosen Wali";
 include 'header.php'; 
@@ -41,7 +52,7 @@ include 'header.php';
                 <div class="flex items-center justify-between mb-6">
                     <h2 class="text-lg font-semibold text-gray-800 border-l-4 border-cyan-500 pl-3">Daftar Mahasiswa Perwalian Anda</h2>
                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                        Total: <?php echo mysqli_num_rows($hasil_mahasiswa); ?> Mahasiswa
+                        Total: <?php echo count($hasil_mahasiswa); ?> Mahasiswa
                     </span>
                 </div>
 
@@ -58,8 +69,8 @@ include 'header.php';
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
                             <?php
-                            if (mysqli_num_rows($hasil_mahasiswa) > 0) {
-                                while ($data = mysqli_fetch_assoc($hasil_mahasiswa)) {
+                            if (count($hasil_mahasiswa) > 0) {
+                                foreach ($hasil_mahasiswa as $data) {
                                     echo "<tr class='hover:bg-gray-50 transition-colors'>";
                                     echo "<td class='px-6 py-4 whitespace-nowrap text-sm text-gray-500 font-mono'>{$data['nim']}</td>";
                                     echo "<td class='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900'>{$data['nama_mahasiswa']}</td>";
@@ -85,4 +96,5 @@ include 'header.php';
     </div>
 
 <?php include 'footer.php'; ?>
-<?php mysqli_close($koneksi); ?>
+<?php // No close needed
+?>

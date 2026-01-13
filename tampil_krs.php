@@ -14,11 +14,16 @@ if ($_SESSION['role'] != 'mahasiswa') {
     // Untuk sekarang kita batasi ke mahasiswa sja.
     // Atau jika admin, kita butuh parameter ?nim=...
     if (isset($_GET['nim']) && $_SESSION['role'] == 'admin') {
-         $nim = mysqli_real_escape_string($koneksi, $_GET['nim']);
+         $nim = $_GET['nim'];
          // Ambil nama mahasiswa 
-         $q_mhs = mysqli_query($koneksi, "SELECT nama_mahasiswa FROM mahasiswa WHERE nim='$nim'");
-         $d_mhs = mysqli_fetch_assoc($q_mhs);
-         $nama_mhs = $d_mhs['nama_mahasiswa'];
+         try {
+             $stmt_mhs = $koneksi->prepare("SELECT nama_mahasiswa FROM mahasiswa WHERE nim = ?");
+             $stmt_mhs->execute([$nim]);
+             $d_mhs = $stmt_mhs->fetch(PDO::FETCH_ASSOC);
+             $nama_mhs = $d_mhs['nama_mahasiswa'] ?? 'Unknown';
+         } catch (PDOException $e) {
+             $nama_mhs = "Error";
+         }
     } else {
         // Default (Mahasiswa login)
         if ($_SESSION['role'] != 'mahasiswa') {
@@ -28,9 +33,11 @@ if ($_SESSION['role'] != 'mahasiswa') {
         // --- LOGIKA FALLBACK NIM UNTUK AKUN ILLEGAL/TESTING ---
         $nim = $_SESSION['nim'] ?? '';
         if (empty($nim)) {
-            $username_clean = mysqli_real_escape_string($koneksi, $_SESSION['username']);
-            $check_nim = mysqli_query($koneksi, "SELECT nim FROM mahasiswa WHERE nim = '$username_clean'");
-            if (mysqli_num_rows($check_nim) > 0) {
+            $username_clean = $_SESSION['username'];
+            $stmt_check = $koneksi->prepare("SELECT nim FROM mahasiswa WHERE nim = ?");
+            $stmt_check->execute([$username_clean]);
+            
+            if ($stmt_check->rowCount() > 0) {
                 $nim = $username_clean;
                 $_SESSION['nim'] = $nim;
             } else {
@@ -80,9 +87,11 @@ if ($_SESSION['role'] != 'mahasiswa') {
     // --- LOGIKA FALLBACK NIM JUGA DI SINI (JIKA USER LANGSUNG KE SINI ) ---
      $nim = $_SESSION['nim'] ?? '';
         if (empty($nim)) {
-            $username_clean = mysqli_real_escape_string($koneksi, $_SESSION['username']);
-            $check_nim = mysqli_query($koneksi, "SELECT nim FROM mahasiswa WHERE nim = '$username_clean'");
-            if (mysqli_num_rows($check_nim) > 0) {
+            $username_clean = $_SESSION['username'];
+            $stmt_check = $koneksi->prepare("SELECT nim FROM mahasiswa WHERE nim = ?");
+            $stmt_check->execute([$username_clean]);
+
+            if ($stmt_check->rowCount() > 0) {
                 $nim = $username_clean;
                 $_SESSION['nim'] = $nim;
             } else {
@@ -134,10 +143,17 @@ $semester_aktif = get_active_semester($koneksi);
 $sql = "SELECT k.tanggal_ambil, m.kode_mk, m.nama_mk, m.sks, m.semester, m.hari, m.jam_mulai, m.jam_selesai, m.ruangan
         FROM krs k 
         JOIN mata_kuliah m ON k.kode_matkul = m.kode_mk 
-        WHERE k.nim_mahasiswa = '$nim' AND k.semester = '$semester_aktif'
+        WHERE k.nim_mahasiswa = :nim AND k.semester = :sem
         ORDER BY m.semester, m.nama_mk";
 
-$hasil = mysqli_query($koneksi, $sql);
+try {
+    $stmt = $koneksi->prepare($sql);
+    $stmt->execute([':nim' => $nim, ':sem' => $semester_aktif]);
+    $hasil = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    $hasil = [];
+}
+
 
 $page_title = "Lihat KRS - " . htmlspecialchars($nama_mhs);
 include 'header.php'; 
@@ -191,8 +207,8 @@ include 'header.php';
                             <?php
                             $nomor = 1;
                             $total_sks = 0;
-                            if (mysqli_num_rows($hasil) > 0) {
-                                while ($row = mysqli_fetch_assoc($hasil)) {
+                            if (count($hasil) > 0) {
+                                foreach ($hasil as $row) {
                                     echo "<tr class='hover:bg-gray-50 transition-colors'>";
                                     echo "<td class='px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500'>{$nomor}</td>";
                                     echo "<td class='px-6 py-4 whitespace-nowrap text-sm text-gray-500 font-mono'>{$row['kode_mk']}</td>";
@@ -239,4 +255,4 @@ include 'header.php';
     </div>
 
 <?php include 'footer.php'; ?>
-<?php mysqli_close($koneksi); ?>
+<?php // No close needed ?>

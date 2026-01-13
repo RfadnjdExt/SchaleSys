@@ -11,28 +11,38 @@ $nama_dosen = '';
 $email = '';
 
 // --- BAGIAN 1: PROSES UPDATE (JIKA FORM DISUBMIT) ---
+// --- BAGIAN 1: PROSES UPDATE (JIKA FORM DISUBMIT) ---
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     // Ambil semua data dari form
-    $nip = mysqli_real_escape_string($koneksi, $_POST['nip']);
-    $nama_dosen = mysqli_real_escape_string($koneksi, $_POST['nama_dosen']);
-    $email = mysqli_real_escape_string($koneksi, $_POST['email']);
+    $nip = $_POST['nip'];
+    $nama_dosen = $_POST['nama_dosen'];
+    $email = $_POST['email'];
 
     // Validasi
     if (!empty($nip) && !empty($nama_dosen)) {
         
-        // Buat kueri UPDATE
-        $sql = "UPDATE dosen 
-                SET nama_dosen = '$nama_dosen', 
-                    email = '$email'
-                WHERE nip = '$nip'";
-        
-        // Jalankan kueri
-        if (mysqli_query($koneksi, $sql)) {
-            header("Location: tampil_dosen.php?status=update_sukses");
-            exit;
-        } else {
-            $pesan = "Error saat mengupdate data: " . mysqli_error($koneksi);
+        try {
+            // Buat kueri UPDATE
+            $sql = "UPDATE dosen 
+                    SET nama_dosen = :nama, 
+                        email = :email
+                    WHERE nip = :nip";
+            
+            $stmt = $koneksi->prepare($sql);
+            $params = [
+                ':nama' => $nama_dosen,
+                ':email' => $email,
+                ':nip' => $nip
+            ];
+
+            // Jalankan kueri
+            if ($stmt->execute($params)) {
+                header("Location: tampil_dosen.php?status=update_sukses");
+                exit;
+            }
+        } catch (PDOException $e) {
+            $pesan = "Error saat mengupdate data: " . $e->getMessage();
             $pesan_tipe = "danger";
         }
     } else {
@@ -43,29 +53,32 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 // --- BAGIAN 2: TAMPILKAN FORM (JIKA HALAMAN DIBUKA BIASA) ---
 else if (isset($_GET['nip']) && !empty($_GET['nip'])) {
     
-    $nip = mysqli_real_escape_string($koneksi, $_GET['nip']);
+    $nip = $_GET['nip'];
     
-    // Ambil data dosen yang sekarang berdasarkan NIP
-    $sql_current = "SELECT * FROM dosen WHERE nip = '$nip'";
-    $hasil_current = mysqli_query($koneksi, $sql_current);
-    
-    if (mysqli_num_rows($hasil_current) == 1) {
-        $data = mysqli_fetch_assoc($hasil_current);
-        $nama_dosen = $data['nama_dosen'];
-        $email = $data['email'];
-    } else {
-        die("Error: Data dosen tidak ditemukan.");
+    try {
+        // Ambil data dosen yang sekarang berdasarkan NIP
+        $stmt = $koneksi->prepare("SELECT * FROM dosen WHERE nip = ?");
+        $stmt->execute([$nip]);
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if ($data) {
+            $nama_dosen = $data['nama_dosen'];
+            $email = $data['email'];
+        } else {
+            die("Error: Data dosen tidak ditemukan.");
+        }
+    } catch (PDOException $e) {
+        die("Error database: " . $e->getMessage());
     }
 
 } else {
     die("Error: NIP dosen tidak valid atau tidak disediakan.");
 }
 
-?>
 
 $page_title = "Edit Data Dosen";
+include 'header.php'; 
 ?>
-<?php include 'header.php'; ?>
 
     <div class="max-w-xl mx-auto px-4 py-8">
         <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
@@ -118,6 +131,4 @@ $page_title = "Edit Data Dosen";
     </div>
 
 <?php include 'footer.php'; ?>
-<?php
-mysqli_close($koneksi);
-?>
+<?php // No close needed ?>

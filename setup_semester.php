@@ -1,34 +1,42 @@
 <?php
 include 'koneksi.php';
 
-// 1. Buat Tabel semester_config
-$sql_table = "CREATE TABLE IF NOT EXISTS semester_config (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    nama_semester VARCHAR(50) NOT NULL UNIQUE,
-    is_aktif TINYINT(1) DEFAULT 0
-)";
+try {
+    $driver = $koneksi->getAttribute(PDO::ATTR_DRIVER_NAME);
+    
+    // 1. Buat Tabel semester_config
+    if ($driver == 'pgsql') {
+        $sql_table = "CREATE TABLE IF NOT EXISTS semester_config (
+            id SERIAL PRIMARY KEY,
+            nama_semester VARCHAR(50) NOT NULL UNIQUE,
+            is_aktif SMALLINT DEFAULT 0
+        )";
+    } else {
+        $sql_table = "CREATE TABLE IF NOT EXISTS semester_config (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            nama_semester VARCHAR(50) NOT NULL UNIQUE,
+            is_aktif TINYINT(1) DEFAULT 0
+        )";
+    }
 
-if (mysqli_query($koneksi, $sql_table)) {
+    $koneksi->exec($sql_table);
     echo "Tabel 'semester_config' berhasil dibuat/diperiksa.<br>";
-} else {
-    die("Error membuat tabel: " . mysqli_error($koneksi));
-}
 
-// 2. Insert Data Awal (Ganjil 2024/2025) jika belum ada
-$sql_check = "SELECT * FROM semester_config";
-$result_check = mysqli_query($koneksi, $sql_check);
+    // 2. Insert Data Awal (Ganjil 2024/2025) jika belum ada
+    $sql_check = "SELECT COUNT(*) FROM semester_config";
+    $stmt_check = $koneksi->query($sql_check);
+    $count = $stmt_check->fetchColumn();
 
-if (mysqli_num_rows($result_check) == 0) {
-    // Insert dan set sebagai aktif
-    $sql_insert = "INSERT INTO semester_config (nama_semester, is_aktif) VALUES ('Ganjil 2024/2025', 1)";
-    if (mysqli_query($koneksi, $sql_insert)) {
+    if ($count == 0) {
+        // Insert dan set sebagai aktif
+        $sql_insert = "INSERT INTO semester_config (nama_semester, is_aktif) VALUES ('Ganjil 2024/2025', 1)";
+        $koneksi->exec($sql_insert);
         echo "Data semester awal 'Ganjil 2024/2025' berhasil ditambahkan dan diaktifkan.<br>";
     } else {
-        echo "Error insert data: " . mysqli_error($koneksi);
+        echo "Data semester sudah ada, tidak perlu insert awal.<br>";
     }
-} else {
-    echo "Data semester sudah ada, tidak perlu insert awal.<br>";
-}
 
-mysqli_close($koneksi);
+} catch (PDOException $e) {
+    die("Error: " . $e->getMessage());
+}
 ?>

@@ -22,59 +22,45 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Verifikasi CSRF Token
     verify_csrf_token();
     
-    // Ambil data dari form (tidak perlu escaping manual jika pakai prepared stmt, tapi tetap aman)
+    // Ambil data dari form
     $username = $_POST['username'];
     $password = $_POST['password'];
 
     // Validasi dasar
     if (!empty($username) && !empty($password)) {
         
-        // GUNAKAN PREPARED STATEMENT
-        $stmt = mysqli_prepare($koneksi, "SELECT id_user, username, nama_lengkap, password, role, nim, nip FROM users WHERE username = ?");
-        
-        if ($stmt) {
-            mysqli_stmt_bind_param($stmt, "s", $username);
-            mysqli_stmt_execute($stmt);
-            $hasil = mysqli_stmt_get_result($stmt);
+        try {
+            // GUNAKAN PDO PREPARED STATEMENT
+            $stmt = $koneksi->prepare("SELECT id_user, username, nama_lengkap, password, role, nim, nip FROM users WHERE username = ?");
+            $stmt->execute([$username]);
+            $user_data = $stmt->fetch(PDO::FETCH_ASSOC);
             
             // 4. Cek apakah username ditemukan
-            if (mysqli_num_rows($hasil) == 1) {
-                $user_data = mysqli_fetch_assoc($hasil);
-            
-            // 5. Verifikasi password yang di-hash
-            if (password_verify($password, $user_data['password'])) {
+            if ($user_data) {
                 
-                // ----------------------------------------------------
-                // ## PERUBAHAN DIMULAI DI SINI ##
-                // ----------------------------------------------------
-                
-                // 6. Jika password benar, simpan SEMUA data ke session
-                $_SESSION['user_id'] = $user_data['id_user'];
-                $_SESSION['username'] = $user_data['username'];
-                $_SESSION['nama_lengkap'] = $user_data['nama_lengkap'];
-                $_SESSION['role'] = $user_data['role']; // <-- DATA PERAN BARU
-                $_SESSION['nim'] = $user_data['nim']; // <-- DATA NIM BARU
-                $_SESSION['nip'] = $user_data['nip']; // <-- DATA NIP BARU
-                
-                // ----------------------------------------------------
-                // ## PERUBAHAN SELESAI ##
-                // ----------------------------------------------------
-
-                // 7. Redirect ke halaman utama (index.php)
-                header("Location: index.php");
-                exit;
-
-            } else {
-                // Jika password salah
-                $error_message = "Username atau password salah.";
-            }
+                // 5. Verifikasi password yang di-hash
+                if (password_verify($password, $user_data['password'])) {
+                    
+                    // 6. Jika password benar, simpan SEMUA data ke session
+                    $_SESSION['user_id'] = $user_data['id_user'];
+                    $_SESSION['username'] = $user_data['username'];
+                    $_SESSION['nama_lengkap'] = $user_data['nama_lengkap'];
+                    $_SESSION['role'] = $user_data['role']; 
+                    $_SESSION['nim'] = $user_data['nim']; 
+                    $_SESSION['nip'] = $user_data['nip']; 
+    
+                    // 7. Redirect ke halaman utama (index.php)
+                    header("Location: index.php");
+                    exit;
+    
+                } else {
+                    $error_message = "Username atau password salah.";
+                }
             } else {
                 $error_message = "Username atau password salah.";
             }
-            
-            mysqli_stmt_close($stmt); // Tutup statement
-        } else {
-            $error_message = "Gagal menyiapkan query database.";
+        } catch (PDOException $e) {
+             $error_message = "Terjadi kesalahan database: " . $e->getMessage();
         }
 
     } else {
@@ -82,8 +68,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
-// Tutup koneksi
-mysqli_close($koneksi);
+// Tutup koneksi (Opsional di PDO, otomatis tertutup saat script selesai)
+// $koneksi = null;
 ?>
 
 <!DOCTYPE html>

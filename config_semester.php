@@ -4,17 +4,22 @@
 
 // Pastikan koneksi sudah ada (jika belum di-include sebelumnya, include di sini)
 // Namun agar aman, kita cek dulu variabel $koneksi
+// Pastikan koneksi sudah ada (jika belum di-include sebelumnya, include di sini)
+// Namun agar aman, kita cek dulu variabel $koneksi
 if (!isset($koneksi)) {
     include 'koneksi.php';
 }
 
 function get_active_semester($conn) {
-    $sql = "SELECT nama_semester FROM semester_config WHERE is_aktif = 1 LIMIT 1";
-    $result = mysqli_query($conn, $sql);
-    
-    if ($result && mysqli_num_rows($result) > 0) {
-        $row = mysqli_fetch_assoc($result);
-        return $row['nama_semester'];
+    try {
+        $stmt = $conn->query("SELECT nama_semester FROM semester_config WHERE is_aktif = 1 LIMIT 1");
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if ($row) {
+            return $row['nama_semester'];
+        }
+    } catch (PDOException $e) {
+        // Fallback silently or log error
     }
     
     // Fallback jika tidak ada semester aktif di DB

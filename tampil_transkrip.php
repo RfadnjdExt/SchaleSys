@@ -21,6 +21,9 @@ if (isset($_GET['status'])) {
 // ----------------------------------------------------
 // ## LOGIKA KEAMANAN PERAN (BARU) ##
 // ----------------------------------------------------
+// ----------------------------------------------------
+// ## LOGIKA KEAMANAN PERAN (BARU) ##
+// ----------------------------------------------------
 $nim_mahasiswa = '';
 
 if ($_SESSION['role'] == 'mahasiswa') {
@@ -32,9 +35,10 @@ if ($_SESSION['role'] == 'mahasiswa') {
     // 2. [FALLBACK] Jika session kosong, coba gunakan username sebagai NIM
     if (empty($nim_mahasiswa)) {
         // Cek apakah username ini ada di tabel mahasiswa
-        $username_clean = mysqli_real_escape_string($koneksi, $_SESSION['username']);
-        $check_nim = mysqli_query($koneksi, "SELECT nim FROM mahasiswa WHERE nim = '$username_clean'");
-        if (mysqli_num_rows($check_nim) > 0) {
+        $username_clean = $_SESSION['username'];
+        $stmt_check = $koneksi->prepare("SELECT nim FROM mahasiswa WHERE nim = ?");
+        $stmt_check->execute([$username_clean]);
+        if ($stmt_check->rowCount() > 0) {
             $nim_mahasiswa = $username_clean;
             // Update session untuk request berikutnya
             $_SESSION['nim'] = $nim_mahasiswa; 
@@ -96,7 +100,7 @@ if ($_SESSION['role'] == 'mahasiswa') {
         include 'footer.php';
         exit;
     }
-    $nim_mahasiswa = mysqli_real_escape_string($koneksi, $_GET['nim']);
+    $nim_mahasiswa = $_GET['nim'];
 }
 // ----------------------------------------------------
 // ## LOGIKA KEAMANAN SELESAI ##
@@ -104,12 +108,16 @@ if ($_SESSION['role'] == 'mahasiswa') {
 
 
 // --- QUERY 1: Ambil data biodata (Variabel $nim_mahasiswa sekarang sudah aman)
-$sql_biodata = "SELECT nama_mahasiswa, prodi, angkatan FROM mahasiswa WHERE nim = '$nim_mahasiswa'";
-$hasil_biodata = mysqli_query($koneksi, $sql_biodata);
-$biodata = mysqli_fetch_assoc($hasil_biodata);
+try {
+    $stmt_bio = $koneksi->prepare("SELECT nama_mahasiswa, prodi, angkatan FROM mahasiswa WHERE nim = ?");
+    $stmt_bio->execute([$nim_mahasiswa]);
+    $biodata = $stmt_bio->fetch(PDO::FETCH_ASSOC);
 
-if (!$biodata) {
-    die("<h1>Error: Mahasiswa dengan NIM $nim_mahasiswa tidak ditemukan.</h1>");
+    if (!$biodata) {
+        die("<h1>Error: Mahasiswa dengan NIM " . htmlspecialchars($nim_mahasiswa) . " tidak ditemukan.</h1>");
+    }
+} catch (PDOException $e) {
+    die("Error Database: " . $e->getMessage());
 }
 
 $page_title = "Transkrip Nilai - " . htmlspecialchars($biodata['nama_mahasiswa']);
@@ -162,52 +170,59 @@ include 'header.php';
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
                             <?php
-                            $sql_nilai = "SELECT n.id_nilai, mk.kode_mk, mk.nama_mk, mk.sks, n.nilai_huruf
-                                          FROM nilai n
-                                          JOIN mata_kuliah mk ON n.kode_matkul = mk.kode_mk
-                                          WHERE n.nim_mahasiswa = '$nim_mahasiswa'
-                                          ORDER BY mk.semester ASC";
-                            
-                            $hasil_nilai = mysqli_query($koneksi, $sql_nilai);
-                            $total_sks = 0; $total_bobot_kali_sks = 0;
+                            try {
+                                $sql_nilai = "SELECT n.id_nilai, mk.kode_mk, mk.nama_mk, mk.sks, n.nilai_huruf
+                                              FROM nilai n
+                                              JOIN mata_kuliah mk ON n.kode_matkul = mk.kode_mk
+                                              WHERE n.nim_mahasiswa = :nim
+                                              ORDER BY mk.semester ASC";
+                                
+                                $stmt_nilai = $koneksi->prepare($sql_nilai);
+                                $stmt_nilai->execute([':nim' => $nim_mahasiswa]);
+                                $hasil_nilai = $stmt_nilai->fetchAll(PDO::FETCH_ASSOC);
+                                
+                                $total_sks = 0; $total_bobot_kali_sks = 0;
 
-                            if (mysqli_num_rows($hasil_nilai) > 0) {
-                                while ($data = mysqli_fetch_assoc($hasil_nilai)) {
-                                    $bobot = 0;
-                                    switch ($data['nilai_huruf']) {
-                                        case 'A': $bobot = 4; break;
-                                        case 'B': $bobot = 3; break;
-                                        case 'C': $bobot = 2; break;
-                                        case 'D': $bobot = 1; break;
-                                        default:  $bobot = 0; break;
-                                    }
-                                    $sks_kali_bobot = $data['sks'] * $bobot;
-                                    $total_sks += $data['sks'];
-                                    $total_bobot_kali_sks += $sks_kali_bobot;
+                                if (count($hasil_nilai) > 0) {
+                                    foreach ($hasil_nilai as $data) {
+                                        $bobot = 0;
+                                        switch ($data['nilai_huruf']) {
+                                            case 'A': $bobot = 4; break;
+                                            case 'B': $bobot = 3; break;
+                                            case 'C': $bobot = 2; break;
+                                            case 'D': $bobot = 1; break;
+                                            default:  $bobot = 0; break;
+                                        }
+                                        $sks_kali_bobot = $data['sks'] * $bobot;
+                                        $total_sks += $data['sks'];
+                                        $total_bobot_kali_sks += $sks_kali_bobot;
 
-                                    echo "<tr class='hover:bg-gray-50 transition-colors duration-150'>";
-                                    echo "<td class='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900'>" . htmlspecialchars($data['kode_mk']) . "</td>";
-                                    echo "<td class='px-6 py-4 whitespace-nowrap text-sm text-gray-700'>" . htmlspecialchars($data['nama_mk']) . "</td>";
-                                    echo "<td class='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>" . htmlspecialchars($data['sks']) . "</td>";
-                                    
-                                    // Badge untuk Nilai
-                                    $badgeColor = $data['nilai_huruf'] == 'A' ? 'bg-green-100 text-green-800' : ($data['nilai_huruf'] == 'B' ? 'bg-blue-100 text-blue-800' : ($data['nilai_huruf'] == 'C' ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'));
-                                    echo "<td class='px-6 py-4 whitespace-nowrap text-center'><span class='px-2 inline-flex text-xs leading-5 font-semibold rounded-full {$badgeColor}'>" . htmlspecialchars($data['nilai_huruf']) . "</span></td>";
-                                    
-                                    echo "<td class='px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center'>" . $bobot . "</td>";
-                                    echo "<td class='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 text-right'>" . $sks_kali_bobot . "</td>";
-                                    
-                                    if ($_SESSION['role'] == 'admin' || $_SESSION['role'] == 'dosen') {
-                                        echo "<td class='px-6 py-4 whitespace-nowrap text-right text-sm font-medium'>
-                                                <a href='edit_nilai.php?id=" . $data['id_nilai'] . "' class='text-indigo-600 hover:text-indigo-900 mr-4'>Edit</a>
-                                                <a href='hapus_nilai.php?id=" . $data['id_nilai'] . "' class='text-red-600 hover:text-red-900' onclick='return confirm(\"Yakin hapus?\");'>Hapus</a>
-                                              </td>";
+                                        echo "<tr class='hover:bg-gray-50 transition-colors duration-150'>";
+                                        echo "<td class='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900'>" . htmlspecialchars($data['kode_mk']) . "</td>";
+                                        echo "<td class='px-6 py-4 whitespace-nowrap text-sm text-gray-700'>" . htmlspecialchars($data['nama_mk']) . "</td>";
+                                        echo "<td class='px-6 py-4 whitespace-nowrap text-sm text-gray-500'>" . htmlspecialchars($data['sks']) . "</td>";
+                                        
+                                        // Badge untuk Nilai
+                                        $badgeColor = $data['nilai_huruf'] == 'A' ? 'bg-green-100 text-green-800' : ($data['nilai_huruf'] == 'B' ? 'bg-blue-100 text-blue-800' : ($data['nilai_huruf'] == 'C' ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'));
+                                        echo "<td class='px-6 py-4 whitespace-nowrap text-center'><span class='px-2 inline-flex text-xs leading-5 font-semibold rounded-full {$badgeColor}'>" . htmlspecialchars($data['nilai_huruf']) . "</span></td>";
+                                        
+                                        echo "<td class='px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center'>" . $bobot . "</td>";
+                                        echo "<td class='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 text-right'>" . $sks_kali_bobot . "</td>";
+                                        
+                                        if ($_SESSION['role'] == 'admin' || $_SESSION['role'] == 'dosen') {
+                                            echo "<td class='px-6 py-4 whitespace-nowrap text-right text-sm font-medium'>
+                                                    <a href='edit_nilai.php?id=" . $data['id_nilai'] . "' class='text-indigo-600 hover:text-indigo-900 mr-4'>Edit</a>
+                                                    <a href='hapus_nilai.php?id=" . $data['id_nilai'] . "' class='text-red-600 hover:text-red-900' onclick='return confirm(\"Yakin hapus?\");'>Hapus</a>
+                                                  </td>";
+                                        }
+                                        echo "</tr>";
                                     }
-                                    echo "</tr>";
+                                } else {
+                                    $colspan = ($_SESSION['role'] == 'mahasiswa') ? 6 : 7;
+                                    echo "<tr><td colspan='$colspan' class='px-6 py-4 text-center text-sm text-gray-500'>Belum ada data nilai.</td></tr>";
                                 }
-                            } else {
-                                $colspan = ($_SESSION['role'] == 'mahasiswa') ? 6 : 7;
-                                echo "<tr><td colspan='$colspan' class='px-6 py-4 text-center text-sm text-gray-500'>Belum ada data nilai.</td></tr>";
+                            } catch (PDOException $e) {
+                                echo "<tr><td colspan='7' class='text-red-500 p-4'>Error loading grades: " . $e->getMessage() . "</td></tr>";
                             }
                             ?>
                         </tbody>
@@ -245,6 +260,4 @@ include 'header.php';
     </div>
 
 <?php include 'footer.php'; ?>
-<?php
-mysqli_close($koneksi);
-?>
+<?php // No close needed ?>

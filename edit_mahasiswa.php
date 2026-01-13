@@ -23,35 +23,48 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     verify_csrf_token();
     
     // Ambil semua data dari form
-    $nim = mysqli_real_escape_string($koneksi, $_POST['nim']);
-    $nama_mahasiswa = mysqli_real_escape_string($koneksi, $_POST['nama_mahasiswa']);
-    $fakultas = mysqli_real_escape_string($koneksi, $_POST['fakultas']);
-    $prodi = mysqli_real_escape_string($koneksi, $_POST['prodi']);
+    $nim = $_POST['nim'];
+    $nama_mahasiswa = $_POST['nama_mahasiswa'];
+    $fakultas = $_POST['fakultas'];
+    $prodi = $_POST['prodi'];
     $angkatan = (int)$_POST['angkatan'];
-    $foto = mysqli_real_escape_string($koneksi, $_POST['foto']);
-    $dosen_wali_id = mysqli_real_escape_string($koneksi, $_POST['dosen_wali_id']);
-    $dosen_wali_sql = !empty($dosen_wali_id) ? "'$dosen_wali_id'" : "NULL";
+    $foto = $_POST['foto'];
+    
+    $dosen_wali_id = !empty($_POST['dosen_wali_id']) ? $_POST['dosen_wali_id'] : null;
 
     // Validasi
     if (!empty($nim) && !empty($nama_mahasiswa) && !empty($prodi) && $angkatan > 0 && !empty($fakultas)) {
         
-        // Buat kueri UPDATE
-        $sql = "UPDATE mahasiswa 
-                SET nama_mahasiswa = '$nama_mahasiswa', 
-                    fakultas = '$fakultas',
-                    prodi = '$prodi', 
-                    angkatan = $angkatan,
-                    dosen_wali_id = $dosen_wali_sql,
-                    foto = '$foto'
-                WHERE nim = '$nim'";
-        
-        // Jalankan kueri
-        if (mysqli_query($koneksi, $sql)) {
-            // Jika berhasil, redirect kembali ke daftar mahasiswa
-            header("Location: tampil_mahasiswa.php?status=update_sukses");
-            exit;
-        } else {
-            $pesan = "Error saat mengupdate data: " . mysqli_error($koneksi);
+        try {
+            // Buat kueri UPDATE
+            $sql = "UPDATE mahasiswa 
+                    SET nama_mahasiswa = :nama, 
+                        fakultas = :fakultas,
+                        prodi = :prodi, 
+                        angkatan = :angkatan,
+                        dosen_wali_id = :dosen_wali,
+                        foto = :foto
+                    WHERE nim = :nim";
+            
+            $stmt = $koneksi->prepare($sql);
+            $params = [
+                ':nama' => $nama_mahasiswa,
+                ':fakultas' => $fakultas,
+                ':prodi' => $prodi,
+                ':angkatan' => $angkatan,
+                ':dosen_wali' => $dosen_wali_id,
+                ':foto' => $foto,
+                ':nim' => $nim
+            ];
+
+            // Jalankan kueri
+            if ($stmt->execute($params)) {
+                // Jika berhasil, redirect kembali ke daftar mahasiswa
+                header("Location: tampil_mahasiswa.php?status=update_sukses");
+                exit;
+            }
+        } catch (PDOException $e) {
+            $pesan = "Error saat mengupdate data: " . $e->getMessage();
             $pesan_tipe = "danger";
         }
     } else {
@@ -62,22 +75,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 // --- BAGIAN 2: TAMPILKAN FORM (JIKA HALAMAN DIBUKA BIASA) ---
 else if (isset($_GET['nim']) && !empty($_GET['nim'])) {
     
-    $nim = mysqli_real_escape_string($koneksi, $_GET['nim']);
+    $nim = $_GET['nim'];
     
-    // Ambil data mahasiswa yang sekarang berdasarkan NIM
-    $sql_current = "SELECT * FROM mahasiswa WHERE nim = '$nim'";
-    $hasil_current = mysqli_query($koneksi, $sql_current);
-    
-    if (mysqli_num_rows($hasil_current) == 1) {
-        $data = mysqli_fetch_assoc($hasil_current);
-        $nama_mahasiswa = $data['nama_mahasiswa'];
-        $fakultas = $data['fakultas'];
-        $prodi = $data['prodi'];
-        $angkatan = $data['angkatan'];
-        $foto = $data['foto'];
-        $current_dosen_wali = $data['dosen_wali_id'];
-    } else {
-        die("Error: Data mahasiswa tidak ditemukan.");
+    try {
+        // Ambil data mahasiswa yang sekarang berdasarkan NIM
+        $stmt_current = $koneksi->prepare("SELECT * FROM mahasiswa WHERE nim = ?");
+        $stmt_current->execute([$nim]);
+        $data = $stmt_current->fetch(PDO::FETCH_ASSOC);
+        
+        if ($data) {
+            $nama_mahasiswa = $data['nama_mahasiswa'];
+            $fakultas = $data['fakultas'];
+            $prodi = $data['prodi'];
+            $angkatan = $data['angkatan'];
+            $foto = $data['foto'];
+            $current_dosen_wali = $data['dosen_wali_id'];
+        } else {
+            die("Error: Data mahasiswa tidak ditemukan.");
+        }
+    } catch (PDOException $e) {
+        die("Error database: " . $e->getMessage());
     }
 
 } else {
@@ -85,7 +102,7 @@ else if (isset($_GET['nim']) && !empty($_GET['nim'])) {
 }
 
 // Ambil data dosen untuk dropdown (selalu diperlukan)
-$hasil_dosen = mysqli_query($koneksi, "SELECT nip, nama_dosen FROM dosen ORDER BY nama_dosen");
+$stmt_dosen = $koneksi->query("SELECT nip, nama_dosen FROM dosen ORDER BY nama_dosen");
 
 
 $page_title = "Edit Data Mahasiswa";
@@ -153,11 +170,11 @@ include 'header.php';
                         <select id="dosen_wali_id" name="dosen_wali_id" class="w-full rounded-md border-gray-300 shadow-sm focus:border-yellow-500 focus:ring focus:ring-yellow-200 focus:ring-opacity-50 py-2 px-3 bg-white">
                             <option value="">-- Tidak Ada --</option>
                             <?php
-                                while ($dosen = mysqli_fetch_assoc($hasil_dosen)) {
-                                    $nip = htmlspecialchars($dosen['nip']);
+                                while ($dosen = $stmt_dosen->fetch(PDO::FETCH_ASSOC)) {
+                                    $nip_dosen = htmlspecialchars($dosen['nip']);
                                     $nama_dosen = htmlspecialchars($dosen['nama_dosen']);
-                                    $selected = ($nip == $current_dosen_wali) ? 'selected' : '';
-                                    echo "<option value='{$nip}' {$selected}>{$nama_dosen}</option>";
+                                    $selected = ($nip_dosen == $current_dosen_wali) ? 'selected' : '';
+                                    echo "<option value='{$nip_dosen}' {$selected}>{$nama_dosen}</option>";
                                 }
                             ?>
                         </select>
@@ -177,6 +194,4 @@ include 'header.php';
     </div>
 
 <?php include 'footer.php'; ?>
-<?php
-mysqli_close($koneksi);
-?>
+<?php // No close needed ?>

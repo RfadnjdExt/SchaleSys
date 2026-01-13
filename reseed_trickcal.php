@@ -131,46 +131,73 @@ $keys = array_keys($data_karakter);
 shuffle($keys); // ACAK Urutan
 
 // 1. Tambah Kolom 'fakultas' jika belum ada
-$check_col = mysqli_query($koneksi, "SHOW COLUMNS FROM mahasiswa LIKE 'fakultas'");
-if (mysqli_num_rows($check_col) == 0) {
-    mysqli_query($koneksi, "ALTER TABLE mahasiswa ADD COLUMN fakultas VARCHAR(100) AFTER nama_mahasiswa");
-    echo "Kolom 'fakultas' berhasil ditambahkan.\n";
-}
+$check_col = false;
+try {
+    $driver = $koneksi->getAttribute(PDO::ATTR_DRIVER_NAME);
 
-// 2. Kosongkan Tabel (Truncate)
-// Matikan Foreign Key Check di awal dan hidupkan kembali di akhir untuk keamanan
-mysqli_query($koneksi, "SET FOREIGN_KEY_CHECKS = 0");
-if (!mysqli_query($koneksi, "TRUNCATE TABLE mahasiswa")) {
-    die("Gagal truncate: " . mysqli_error($koneksi));
-}
-mysqli_query($koneksi, "SET FOREIGN_KEY_CHECKS = 1");
-echo "Tabel mahasiswa dikosongkan.\n";
-
-// 3. Insert Ulang dengan Urutan Acak
-echo "Mulai seeding ulang (" . count($keys) . " karakter)...\n";
-
-$nim_start = 2024001;
-$angkatan = 2024;
-$fakultas_default = "Trickcal Revive"; // Nama Game
-
-$query = "INSERT INTO mahasiswa (nim, nama_mahasiswa, fakultas, prodi, angkatan, foto) VALUES (?, ?, ?, ?, ?, ?)";
-$stmt = mysqli_prepare($koneksi, $query);
-
-if (!$stmt) {
-    die("Prepare failed: " . mysqli_error($koneksi));
-}
-
-foreach ($keys as $index => $nama) {
-    $nim = $nim_start + $index;
-    $url = $data_karakter[$nama];
-    $prodi = "Petualang"; 
-
-    mysqli_stmt_bind_param($stmt, "ssssis", $nim, $nama, $fakultas_default, $prodi, $angkatan, $url);
-    if (!mysqli_stmt_execute($stmt)) {
-        echo "Gagal insert $nama: " . mysqli_stmt_error($stmt) . "\n";
+    // 1. Tambah Kolom 'fakultas' jika belum ada
+    $exists = false;
+    if ($driver == 'pgsql') {
+        $stmt = $koneksi->prepare("SELECT column_name FROM information_schema.columns WHERE table_name = 'mahasiswa' AND column_name = 'fakultas'");
+        $stmt->execute();
+         if ($stmt->fetch()) $exists = true;
+    } else {
+        $stmt = $koneksi->query("SHOW COLUMNS FROM mahasiswa LIKE 'fakultas'");
+        if ($stmt->fetch()) $exists = true;
     }
-}
 
-echo "Sukses! Database telah dirombak dengan " . count($keys) . " karakter Trickcal.\n";
-mysqli_close($koneksi);
+    if (!$exists) {
+        $sql_add = "ALTER TABLE mahasiswa ADD COLUMN fakultas VARCHAR(100)";
+        if ($driver == 'mysql') $sql_add .= " AFTER nama_mahasiswa";
+        $koneksi->exec($sql_add);
+        echo "Kolom 'fakultas' berhasil ditambahkan.\n";
+    }
+
+    // 2. Kosongkan Tabel (Truncate)
+    if ($driver == 'pgsql') {
+        // Postgres: Truncate Cascade
+        $koneksi->exec("TRUNCATE TABLE mahasiswa CASCADE");
+    } else {
+        // MySQL: Disable FK Checks
+        $koneksi->exec("SET FOREIGN_KEY_CHECKS = 0");
+        $koneksi->exec("TRUNCATE TABLE mahasiswa");
+        $koneksi->exec("SET FOREIGN_KEY_CHECKS = 1");
+    }
+    echo "Tabel mahasiswa dikosongkan.\n";
+
+    // 3. Insert Ulang dengan Urutan Acak
+    echo "Mulai seeding ulang (" . count($keys) . " karakter)...\n";
+
+    $nim_start = 2024001;
+    $angkatan = 2024;
+    $fakultas_default = "Trickcal Revive"; // Nama Game
+
+    $query = "INSERT INTO mahasiswa (nim, nama_mahasiswa, fakultas, prodi, angkatan, foto) VALUES (:nim, :nama, :fakultas, :prodi, :angkatan, :foto)";
+    $stmt = $koneksi->prepare($query);
+
+    foreach ($keys as $index => $nama) {
+        $nim = $nim_start + $index;
+        $url = $data_karakter[$nama];
+        $prodi = "Petualang"; 
+        
+        $params = [
+            ':nim' => $nim,
+            ':nama' => $nama,
+            ':fakultas' => $fakultas_default,
+            ':prodi' => $prodi,
+            ':angkatan' => $angkatan,
+            ':foto' => $url
+        ];
+
+        try {
+            $stmt->execute($params);
+        } catch (PDOException $e) {
+            echo "Gagal insert $nama: " . $e->getMessage() . "\n";
+        }
+    }
+
+    echo "Sukses! Database telah dirombak dengan " . count($keys) . " karakter Trickcal.\n";
+} catch (PDOException $e) {
+    echo "Error: " . $e->getMessage();
+}
 ?>

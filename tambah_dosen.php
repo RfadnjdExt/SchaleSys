@@ -10,27 +10,36 @@ $pesan_tipe = '';
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
     // Ambil data
-    $nip = mysqli_real_escape_string($koneksi, $_POST['nip']);
-    $nama_dosen = mysqli_real_escape_string($koneksi, $_POST['nama_dosen']);
-    $email = mysqli_real_escape_string($koneksi, $_POST['email']);
+    $nip = $_POST['nip'];
+    $nama_dosen = $_POST['nama_dosen'];
+    $email = $_POST['email'];
 
     // Validasi dasar
     if (!empty($nip) && !empty($nama_dosen)) {
         
-        // Buat kueri INSERT
-        $sql = "INSERT INTO dosen (nip, nama_dosen, email) 
-                VALUES ('$nip', '$nama_dosen', '$email')";
-        
-        // Jalankan kueri
-        if (mysqli_query($koneksi, $sql)) {
-            $pesan = "Dosen baru berhasil ditambahkan!";
-            $pesan_tipe = "success";
-        } else {
+        try {
+            // Buat kueri INSERT
+            $sql = "INSERT INTO dosen (nip, nama_dosen, email) 
+                    VALUES (:nip, :nama, :email)";
+            
+            $stmt = $koneksi->prepare($sql);
+            $params = [
+                ':nip' => $nip,
+                ':nama' => $nama_dosen,
+                ':email' => $email
+            ];
+
+            // Jalankan kueri
+            if ($stmt->execute($params)) {
+                $pesan = "Dosen baru berhasil ditambahkan!";
+                $pesan_tipe = "success";
+            }
+        } catch (PDOException $e) {
             // Cek jika error karena duplikat NIP
-            if (mysqli_errno($koneksi) == 1062) {
+            if ($e->getCode() == '23000') {
                 $pesan = "Error: NIP '$nip' sudah terdaftar. Gunakan NIP lain.";
             } else {
-                $pesan = "Error: " . mysqli_error($koneksi);
+                $pesan = "Error: " . $e->getMessage();
             }
             $pesan_tipe = "danger";
         }
@@ -97,4 +106,4 @@ include 'header.php';
     </div>
 
 <?php include 'footer.php'; ?>
-<?php mysqli_close($koneksi); ?>
+<?php // No close needed ?>

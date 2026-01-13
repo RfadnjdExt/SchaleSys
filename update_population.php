@@ -19,7 +19,7 @@ if (preg_match('/\$json_data\s*=\s*\'(.*?)\';/s', $trickcal_source, $matches)) {
     $trickcal_raw = json_decode($matches[1], true);
     if (!$trickcal_raw) die("Gagal decode JSON Trickcal dari update_photos.php\n");
 } else {
-    die("Gagal menemukan variabel \$json_data di update_photos.php\n");
+    die("Gagal menemukan variabel \$json_data di update_photos.php (Mungkin file sudah direfactor? Cek kembali format)\n");
 }
 
 // Konversi format Trickcal ke format standar: ['nama', 'foto', 'fakultas']
@@ -61,45 +61,60 @@ if ($total_pool == 0) die("Tidak ada data karakter untuk di-update.\n");
 
 
 // 3. Ambil semua NIM mahasiswa
-$result = mysqli_query($koneksi, "SELECT nim FROM mahasiswa");
-$mahasiswa_list = [];
-while ($row = mysqli_fetch_assoc($result)) {
-    $mahasiswa_list[] = $row['nim'];
-}
-$total_mhs = count($mahasiswa_list);
-echo "Total Mahasiswa Aktif: $total_mhs\n";
+try {
+    $stmt_mhs = $koneksi->query("SELECT nim FROM mahasiswa");
+    $mahasiswa_list = $stmt_mhs->fetchAll(PDO::FETCH_COLUMN); // Ambil array 1 dimensi NIM
+    $total_mhs = count($mahasiswa_list);
+    echo "Total Mahasiswa Aktif: $total_mhs\n";
 
-// 4. Proses Update
-echo "Sedang mengupdate database... (Harap tunggu)\n";
-$start_time = microtime(true);
-$updated_count = 0;
+    // 4. Proses Update
+    echo "Sedang mengupdate database... (Harap tunggu)\n";
+    $start_time = microtime(true);
+    $updated_count = 0;
 
-foreach ($mahasiswa_list as $nim) {
-    // Pilih karakter random
-    $random_char = $all_characters[array_rand($all_characters)];
+    $koneksi->beginTransaction();
     
-    $clean_nama = mysqli_real_escape_string($koneksi, $random_char['nama']);
-    $url_foto = mysqli_real_escape_string($koneksi, $random_char['foto']);
-    $fakultas = mysqli_real_escape_string($koneksi, $random_char['fakultas']);
-    $nim_escaped = mysqli_real_escape_string($koneksi, $nim);
-
     $sql_update = "UPDATE mahasiswa SET 
-                   nama_mahasiswa = '$clean_nama',
-                   foto = '$url_foto',
-                   fakultas = '$fakultas'
-                   WHERE nim = '$nim_escaped'";
-    
-    if (mysqli_query($koneksi, $sql_update)) {
-        $updated_count++;
-    } else {
-        echo "Gagal update NIM $nim: " . mysqli_error($koneksi) . "\n";
+                   nama_mahasiswa = :nama,
+                   foto = :foto,
+                   fakultas = :fakultas
+                   WHERE nim = :nim";
+    $stmt_update = $koneksi->prepare($sql_update);
+
+    foreach ($mahasiswa_list as $nim) {
+        // Pilih karakter random
+        $random_char = $all_characters[array_rand($all_characters)];
+        
+        $params = [
+            ':nama' => $random_char['nama'],
+            ':foto' => $random_char['foto'],
+            ':fakultas' => $random_char['fakultas'],
+            ':nim' => $nim
+        ];
+        
+        if ($stmt_update->execute($params)) {
+            $updated_count++;
+        }
+        
+        // Progress batch commit (optional untuk memori, tapi transaksi 200k masih oke di DB modern)
+        if ($updated_count % 5000 == 0) {
+              echo "Updated $updated_count...\r";
+        }
     }
+
+    $koneksi->commit();
+
+    $duration = number_format(microtime(true) - $start_time, 2);
+    echo "\n=== SELESAI ===\n";
+    echo "Berhasil mengupdate $updated_count dari $total_mhs mahasiswa.\n";
+    echo "Waktu eksekusi: $duration detik.\n";
+
+} catch (PDOException $e) {
+    if ($koneksi->inTransaction()) {
+        $koneksi->rollBack();
+    }
+    echo "Error: " . $e->getMessage() . "\n";
 }
 
-$duration = number_format(microtime(true) - $start_time, 2);
-echo "=== SELESAI ===\n";
-echo "Berhasil mengupdate $updated_count dari $total_mhs mahasiswa.\n";
-echo "Waktu eksekusi: $duration detik.\n";
-
-mysqli_close($koneksi);
+// Tutup koneksi otomatis
 ?>

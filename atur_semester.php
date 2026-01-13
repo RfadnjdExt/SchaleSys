@@ -15,14 +15,16 @@ if (isset($_POST['tambah_semester'])) {
     // Verifikasi CSRF Token (untuk tambah semester)
     verify_csrf_token();
     
-    $nama_baru = mysqli_real_escape_string($koneksi, $_POST['nama_semester']);
+    $nama_baru = $_POST['nama_semester'];
     if (!empty($nama_baru)) {
-        $sql = "INSERT INTO semester_config (nama_semester, is_aktif) VALUES ('$nama_baru', 0)";
-        if (mysqli_query($koneksi, $sql)) {
-            $pesan = "Semester '$nama_baru' berhasil ditambahkan.";
-            $pesan_tipe = "success";
-        } else {
-            $pesan = "Error: " . mysqli_error($koneksi);
+        try {
+            $stmt = $koneksi->prepare("INSERT INTO semester_config (nama_semester, is_aktif) VALUES (:nama, 0)");
+            if ($stmt->execute([':nama' => $nama_baru])) {
+                $pesan = "Semester '$nama_baru' berhasil ditambahkan.";
+                $pesan_tipe = "success";
+            }
+        } catch (PDOException $e) {
+            $pesan = "Error: " . $e->getMessage();
             $pesan_tipe = "danger";
         }
     }
@@ -36,22 +38,34 @@ if (isset($_POST['aktifkan_id'])) {
 
     $id_aktif = (int)$_POST['aktifkan_id'];
     
-    // 1. Nonaktifkan semua
-    mysqli_query($koneksi, "UPDATE semester_config SET is_aktif = 0");
-    
-    // 2. Aktifkan yang dipilih
-    $sql_aktif = "UPDATE semester_config SET is_aktif = 1 WHERE id = $id_aktif";
-    if (mysqli_query($koneksi, $sql_aktif)) {
+    try {
+        $koneksi->beginTransaction();
+        
+        // 1. Nonaktifkan semua
+        $koneksi->exec("UPDATE semester_config SET is_aktif = 0");
+        
+        // 2. Aktifkan yang dipilih
+        $stmt_update = $koneksi->prepare("UPDATE semester_config SET is_aktif = 1 WHERE id = :id");
+        $stmt_update->execute([':id' => $id_aktif]);
+        
+        $koneksi->commit();
+        
         $pesan = "Semester aktif berhasil diperbarui.";
         $pesan_tipe = "success";
-    } else {
-        $pesan = "Error: " . mysqli_error($koneksi);
+    } catch (PDOException $e) {
+        $koneksi->rollBack();
+        $pesan = "Error: " . $e->getMessage();
         $pesan_tipe = "danger";
     }
 }
 
 // --- AMBIL DATA SEMESTER ---
-$hasil = mysqli_query($koneksi, "SELECT * FROM semester_config ORDER BY id DESC");
+try {
+    $stmt_list = $koneksi->query("SELECT * FROM semester_config ORDER BY id DESC");
+    $hasil = $stmt_list->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    $hasil = [];
+}
 ?>
 
 <?php include 'header.php'; ?>
@@ -101,7 +115,7 @@ $hasil = mysqli_query($koneksi, "SELECT * FROM semester_config ORDER BY id DESC"
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
-                            <?php while ($row = mysqli_fetch_assoc($hasil)): ?>
+                            <?php foreach ($hasil as $row): ?>
                                 <tr class="<?php echo $row['is_aktif'] ? 'bg-green-50' : 'hover:bg-gray-50'; ?> transition-colors">
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="text-sm font-medium <?php echo $row['is_aktif'] ? 'text-green-900' : 'text-gray-900'; ?>">
@@ -137,7 +151,7 @@ $hasil = mysqli_query($koneksi, "SELECT * FROM semester_config ORDER BY id DESC"
                                         <?php endif; ?>
                                     </td>
                                 </tr>
-                            <?php endwhile; ?>
+                            <?php endforeach; ?>
                         </tbody>
                     </table>
                 </div>

@@ -9,21 +9,24 @@ $pesan_tipe = '';
 
 // --- Logika TAMBAH Penugasan (jika form disubmit) ---
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $nip_dosen = mysqli_real_escape_string($koneksi, $_POST['nip_dosen']);
-    $kode_matkul = mysqli_real_escape_string($koneksi, $_POST['kode_matkul']);
+    $nip_dosen = $_POST['nip_dosen'];
+    $kode_matkul = $_POST['kode_matkul'];
 
     if (!empty($nip_dosen) && !empty($kode_matkul)) {
-        $sql_insert = "INSERT INTO dosen_pengampu (nip_dosen, kode_matkul) VALUES ('$nip_dosen', '$kode_matkul')";
-        
-        if (mysqli_query($koneksi, $sql_insert)) {
-            $pesan = "Dosen berhasil ditugaskan ke mata kuliah.";
-            $pesan_tipe = "success";
-        } else if (mysqli_errno($koneksi) == 1062) { // Error duplikat
-            $pesan = "Gagal: Dosen tersebut sudah ditugaskan ke mata kuliah ini.";
-            $pesan_tipe = "warning";
-        } else {
-            $pesan = "Error: " . mysqli_error($koneksi);
-            $pesan_tipe = "danger";
+        try {
+            $stmt = $koneksi->prepare("INSERT INTO dosen_pengampu (nip_dosen, kode_matkul) VALUES (:nip, :kode)");
+            if ($stmt->execute([':nip' => $nip_dosen, ':kode' => $kode_matkul])) {
+                $pesan = "Dosen berhasil ditugaskan ke mata kuliah.";
+                $pesan_tipe = "success";
+            }
+        } catch (PDOException $e) {
+            if ($e->getCode() == '23000') {
+                $pesan = "Gagal: Dosen tersebut sudah ditugaskan ke mata kuliah ini.";
+                $pesan_tipe = "warning";
+            } else {
+                $pesan = "Error: " . $e->getMessage();
+                $pesan_tipe = "danger";
+            }
         }
     }
 }
@@ -31,25 +34,35 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 // --- Logika HAPUS Penugasan (jika ada parameter ?hapus=) ---
 if (isset($_GET['hapus']) && !empty($_GET['hapus'])) {
     $id_pengampu = (int)$_GET['hapus'];
-    $sql_delete = "DELETE FROM dosen_pengampu WHERE id_pengampu = $id_pengampu";
-    
-    if (mysqli_query($koneksi, $sql_delete)) {
-        $pesan = "Penugasan berhasil dihapus.";
-        $pesan_tipe = "success";
+    try {
+        $stmt_del = $koneksi->prepare("DELETE FROM dosen_pengampu WHERE id_pengampu = :id");
+        if ($stmt_del->execute([':id' => $id_pengampu])) {
+            $pesan = "Penugasan berhasil dihapus.";
+            $pesan_tipe = "success";
+        }
+    } catch (PDOException $e) {
+         $pesan = "Error: " . $e->getMessage();
+         $pesan_tipe = "danger";
     }
 }
 
 // --- Ambil data untuk dropdown dan tabel ---
-$hasil_dosen = mysqli_query($koneksi, "SELECT nip, nama_dosen FROM dosen ORDER BY nama_dosen");
-$hasil_matkul = mysqli_query($koneksi, "SELECT kode_mk, nama_mk FROM mata_kuliah ORDER BY nama_mk");
+try {
+    $hasil_dosen = $koneksi->query("SELECT nip, nama_dosen FROM dosen ORDER BY nama_dosen")->fetchAll(PDO::FETCH_ASSOC);
+    $hasil_matkul = $koneksi->query("SELECT kode_mk, nama_mk FROM mata_kuliah ORDER BY nama_mk")->fetchAll(PDO::FETCH_ASSOC);
 
-// Ambil daftar penugasan yang sudah ada
-$sql_pengampu = "SELECT dp.id_pengampu, d.nama_dosen, mk.nama_mk 
-                 FROM dosen_pengampu dp
-                 JOIN dosen d ON dp.nip_dosen = d.nip
-                 JOIN mata_kuliah mk ON dp.kode_matkul = mk.kode_mk
-                 ORDER BY d.nama_dosen, mk.nama_mk";
-$hasil_pengampu = mysqli_query($koneksi, $sql_pengampu);
+    // Ambil daftar penugasan yang sudah ada
+    $sql_pengampu = "SELECT dp.id_pengampu, d.nama_dosen, mk.nama_mk 
+                     FROM dosen_pengampu dp
+                     JOIN dosen d ON dp.nip_dosen = d.nip
+                     JOIN mata_kuliah mk ON dp.kode_matkul = mk.kode_mk
+                     ORDER BY d.nama_dosen, mk.nama_mk";
+    $hasil_pengampu = $koneksi->query($sql_pengampu)->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    $hasil_dosen = [];
+    $hasil_matkul = [];
+    $hasil_pengampu = [];
+}
 
 $page_title = "Atur Dosen Pengampu";
 include 'header.php'; 
@@ -83,7 +96,7 @@ include 'header.php';
                                 <select id="nip_dosen" name="nip_dosen" class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 py-2 px-3 bg-white" required>
                                     <option value="">-- Pilih Dosen --</option>
                                     <?php
-                                        while ($dosen = mysqli_fetch_assoc($hasil_dosen)) {
+                                        foreach ($hasil_dosen as $dosen) {
                                             echo "<option value='" . $dosen['nip'] . "'>" . htmlspecialchars($dosen['nama_dosen']) . "</option>";
                                         }
                                     ?>
@@ -94,7 +107,7 @@ include 'header.php';
                                 <select id="kode_matkul" name="kode_matkul" class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 py-2 px-3 bg-white" required>
                                     <option value="">-- Pilih Mata Kuliah --</option>
                                     <?php
-                                        while ($mk = mysqli_fetch_assoc($hasil_matkul)) {
+                                        foreach ($hasil_matkul as $mk) {
                                             echo "<option value='" . $mk['kode_mk'] . "'>" . htmlspecialchars($mk['nama_mk']) . "</option>";
                                         }
                                     ?>
@@ -125,8 +138,8 @@ include 'header.php';
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
                                 <?php
-                                if (mysqli_num_rows($hasil_pengampu) > 0) {
-                                    while ($data = mysqli_fetch_assoc($hasil_pengampu)) {
+                                if (count($hasil_pengampu) > 0) {
+                                    foreach ($hasil_pengampu as $data) {
                                         echo "<tr class='hover:bg-gray-50 transition-colors'>";
                                         echo "<td class='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900'>" . htmlspecialchars($data['nama_dosen']) . "</td>";
                                         echo "<td class='px-6 py-4 whitespace-nowrap text-sm text-gray-600'>" . htmlspecialchars($data['nama_mk']) . "</td>";
@@ -151,4 +164,5 @@ include 'header.php';
     </div>
 
 <?php include 'footer.php'; ?>
-<?php mysqli_close($koneksi); ?>
+<?php // No close needed
+?>

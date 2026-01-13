@@ -6,16 +6,16 @@ include "auth_guard.php";
 include "koneksi.php";
 
 $sql_mhs = "SELECT COUNT(nim) AS total_mahasiswa FROM mahasiswa";
-$hasil_mhs = mysqli_query($koneksi, $sql_mhs);
-$total_mahasiswa = mysqli_fetch_assoc($hasil_mhs)["total_mahasiswa"];
+$stmt_mhs = $koneksi->query($sql_mhs);
+$total_mahasiswa = $stmt_mhs->fetch(PDO::FETCH_ASSOC)["total_mahasiswa"];
 
 $sql_mk = "SELECT COUNT(kode_mk) AS total_matkul FROM mata_kuliah";
-$hasil_mk = mysqli_query($koneksi, $sql_mk);
-$total_matkul = mysqli_fetch_assoc($hasil_mk)["total_matkul"];
+$stmt_mk = $koneksi->query($sql_mk);
+$total_matkul = $stmt_mk->fetch(PDO::FETCH_ASSOC)["total_matkul"];
 
 $sql_dosen = "SELECT COUNT(nip) AS total_dosen FROM dosen";
-$hasil_dosen = mysqli_query($koneksi, $sql_dosen);
-$total_dosen = mysqli_fetch_assoc($hasil_dosen)["total_dosen"];
+$stmt_dosen = $koneksi->query($sql_dosen);
+$total_dosen = $stmt_dosen->fetch(PDO::FETCH_ASSOC)["total_dosen"];
 
 $sql_kinerja = "
     SELECT
@@ -32,7 +32,7 @@ $sql_kinerja = "
                 WHEN 'C' THEN 2
                 WHEN 'D' THEN 1
                 ELSE 0
-            END) / SUM(mk.sks) AS ipk
+            END) / NULLIF(SUM(mk.sks), 0) AS ipk
         FROM
             nilai n
         JOIN
@@ -45,11 +45,12 @@ $sql_kinerja = "
     ORDER BY
         ipk_rata_rata DESC
 ";
-$hasil_kinerja = mysqli_query($koneksi, $sql_kinerja);
-
-if (!$hasil_kinerja) {
-    // Debugging: Tampilkan error SQL jika query gagal
-    die("Gagal mengambil data kinerja prodi. Error: " . mysqli_error($koneksi));
+// NOTE: Added NULLIF to prevent division by zero in SQL (compatible with Postgres)
+try {
+    $stmt_kinerja = $koneksi->query($sql_kinerja);
+    $hasil_kinerja = $stmt_kinerja->fetchAll(PDO::FETCH_ASSOC); // Fetch all to easily check count
+} catch (PDOException $e) {
+     die("Gagal mengambil data kinerja prodi. Error: " . $e->getMessage());
 }
 
 $page_title = "Dashboard Kinerja Akademik";
@@ -99,11 +100,13 @@ include 'header.php';
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white divide-y divide-gray-200">
-                                    <?php if (mysqli_num_rows($hasil_kinerja) > 0) {
-                                        while ($data = mysqli_fetch_assoc($hasil_kinerja)) {
+                                    <?php if (count($hasil_kinerja) > 0) {
+                                        foreach ($hasil_kinerja as $data) {
                                             echo "<tr class='hover:bg-gray-50 transition-colors'>";
                                             echo "<td class='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900'>" . htmlspecialchars($data["prodi"]) . "</td>";
-                                            echo "<td class='px-6 py-4 whitespace-nowrap text-sm text-gray-500'><strong>" . number_format($data["ipk_rata_rata"], 2) . "</strong></td>";
+                                            // Handle potential null or floating point precision issues
+                                            $ipk_val = is_numeric($data["ipk_rata_rata"]) ? $data["ipk_rata_rata"] : 0;
+                                            echo "<td class='px-6 py-4 whitespace-nowrap text-sm text-gray-500'><strong>" . number_format((float)$ipk_val, 2) . "</strong></td>";
                                             echo "</tr>";
                                         }
                                     } else {
@@ -153,7 +156,4 @@ include 'header.php';
     </div>
 
 <?php include 'footer.php'; ?>
-<?php // Tutup koneksi
 
-mysqli_close($koneksi);
-?>
