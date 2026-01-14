@@ -4,36 +4,26 @@
     let { data }: { data: PageData } = $props();
 </script>
 
-<div class="max-w-5xl mx-auto px-4 py-8">
+<div class="relative z-10 max-w-[1440px] mx-auto px-4 md:px-6 py-8 md:py-12">
     <div
-        class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden"
+        class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden"
     >
         <div
-            class="bg-linear-to-r from-blue-600 to-indigo-700 px-6 py-4 flex flex-col sm:flex-row justify-between items-center"
+            class="bg-slate-900 px-8 py-6 flex flex-col sm:flex-row justify-between items-center relative overflow-hidden"
         >
-            <div>
-                <h2 class="text-xl font-bold text-white flex items-center">
-                    <svg
-                        class="w-6 h-6 mr-2"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                        ><path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                        ></path></svg
-                    >
-                    Kartu Rencana Studi (KRS)
+            <div class="absolute inset-0 bg-primary/10 bg-noise mix-blend-overlay"></div>
+            <div class="relative z-10">
+                <h2 class="text-2xl font-display font-bold text-white flex items-center tracking-tight">
+                    <span class="material-symbols-outlined mr-3 text-primary">description</span>
+                    KARTU RENCANA STUDI
                 </h2>
-                <p class="text-blue-200 text-sm mt-1 sm:ml-8">
-                    {data.semester_aktif}
+                <p class="text-slate-400 text-sm mt-1 sm:ml-9 font-mono tracking-wider uppercase">
+                    SEMESTER {data.semester_aktif}
                 </p>
             </div>
-            <div class="mt-2 sm:mt-0">
+            <div class="mt-4 sm:mt-0 relative z-10">
                 <span
-                    class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-500 bg-opacity-25 text-white border border-blue-400 capitalize"
+                    class="inline-flex items-center px-4 py-1.5 rounded-full text-xs font-bold font-mono uppercase bg-primary/20 text-primary border border-primary/30"
                 >
                     {data.user?.role}
                 </span>
@@ -41,100 +31,104 @@
         </div>
 
         <div class="p-8">
-            <div class="mb-8 p-6 bg-gray-50 rounded-lg border border-gray-200">
+            <div class="mb-8 p-6 bg-gray-50 dark:bg-gray-700/30 rounded-xl border border-gray-200 dark:border-gray-600">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="flex items-center">
                         <span
-                            class="w-24 text-sm font-medium text-gray-500 uppercase tracking-wider"
+                            class="w-32 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest"
                             >NIM</span
                         >
-                        <span class="text-gray-900 font-semibold"
+                        <span class="text-gray-900 dark:text-white font-mono font-medium"
                             >: {data.user?.nim || "-"}</span
                         >
                     </div>
                     <div class="flex items-center">
                         <span
-                            class="w-24 text-sm font-medium text-gray-500 uppercase tracking-wider"
+                            class="w-32 text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest"
                             >Nama</span
                         >
-                        <span class="text-gray-900 font-semibold"
+                        <span class="text-gray-900 dark:text-white font-medium uppercase"
                             >: {data.user?.nama_lengkap}</span
                         >
                     </div>
                 </div>
             </div>
 
-            <div class="overflow-hidden border border-gray-200 rounded-lg mb-8">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-800 text-white">
+            <div class="overflow-hidden border border-gray-200 dark:border-gray-600 rounded-xl mb-8">
+                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-600">
+                    <thead class="bg-gray-50 dark:bg-gray-700/50">
                         <tr>
                             <th
                                 scope="col"
-                                class="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider w-12"
+                                class="px-6 py-4 text-center text-xs font-bold text-gray-500 dark:text-gray-300 uppercase tracking-widest w-16"
                                 >No</th
                             >
                             <th
                                 scope="col"
-                                class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
+                                class="px-6 py-4 text-left text-xs font-bold text-gray-500 dark:text-gray-300 uppercase tracking-widest"
                                 >Kode MK</th
                             >
                             <th
                                 scope="col"
-                                class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
+                                class="px-6 py-4 text-left text-xs font-bold text-gray-500 dark:text-gray-300 uppercase tracking-widest"
                                 >Nama Mata Kuliah</th
                             >
                             <th
                                 scope="col"
-                                class="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider w-16"
+                                class="px-6 py-4 text-center text-xs font-bold text-gray-500 dark:text-gray-300 uppercase tracking-widest w-16"
                                 >Sem</th
                             >
                             <th
                                 scope="col"
-                                class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
+                                class="px-6 py-4 text-left text-xs font-bold text-gray-500 dark:text-gray-300 uppercase tracking-widest"
                                 >Jadwal</th
                             >
                             <th
                                 scope="col"
-                                class="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider w-16"
+                                class="px-6 py-4 text-center text-xs font-bold text-gray-500 dark:text-gray-300 uppercase tracking-widest w-16"
                                 >SKS</th
                             >
                         </tr>
                     </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
+                    <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-600">
                         {#if data.krs && data.krs.length > 0}
                             {#each data.krs as mk, i}
-                                <tr class="hover:bg-gray-50 transition-colors">
+                                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
                                     <td
-                                        class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500"
+                                        class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500 dark:text-gray-400"
                                         >{i + 1}</td
                                     >
                                     <td
-                                        class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 font-mono"
+                                        class="px-6 py-4 whitespace-nowrap text-sm font-mono font-medium text-primary"
                                         >{mk.kode_mk}</td
                                     >
                                     <td
-                                        class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"
+                                        class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white uppercase"
                                         >{mk.nama_mk}</td
                                     >
                                     <td
-                                        class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-500"
+                                        class="px-6 py-4 whitespace-nowrap text-center text-sm text-gray-600 dark:text-gray-400 font-bold"
                                         >{mk.semester}</td
                                     >
                                     <td
-                                        class="px-6 py-4 whitespace-nowrap text-sm text-gray-600"
+                                        class="px-6 py-4 whitespace-nowrap text-sm"
                                     >
-                                        <div>
-                                            {mk.hari || "-"}
-                                            {mk.jam_mulai
-                                                ? `${mk.jam_mulai.substring(0, 5)}-${mk.jam_selesai.substring(0, 5)}`
-                                                : ""}
+                                        <div class="flex flex-col">
+                                            <span class="font-medium text-gray-900 dark:text-white">{mk.hari || "-"}</span>
+                                            {#if mk.jam_mulai}
+                                                <span class="text-xs text-gray-500 dark:text-gray-400">
+                                                    {mk.jam_mulai.substring(0, 5)} - {mk.jam_selesai.substring(0, 5)}
+                                                </span>
+                                            {/if}
                                         </div>
-                                        <div class="text-xs text-gray-400">
-                                            R. {mk.ruangan || "-"}
-                                        </div>
+                                        {#if mk.ruangan}
+                                            <div class="text-xs text-gray-400 mt-1 uppercase tracking-wider">
+                                                R. {mk.ruangan}
+                                            </div>
+                                        {/if}
                                     </td>
                                     <td
-                                        class="px-6 py-4 whitespace-nowrap text-center text-sm font-bold text-gray-900"
+                                        class="px-6 py-4 whitespace-nowrap text-center text-sm font-bold text-gray-900 dark:text-white"
                                         >{mk.sks}</td
                                     >
                                 </tr>
@@ -143,21 +137,25 @@
                             <tr>
                                 <td
                                     colspan="6"
-                                    class="px-6 py-8 text-center text-gray-500 italic"
-                                    >Belum ada mata kuliah yang diambil.</td
+                                    class="px-6 py-12 text-center text-gray-500 dark:text-gray-400 italic"
                                 >
+                                    <div class="flex flex-col items-center justify-center">
+                                        <span class="material-symbols-outlined text-3xl mb-2 opacity-50">toc</span>
+                                        Belum ada mata kuliah yang diambil.
+                                    </div>
+                                </td>
                             </tr>
                         {/if}
                     </tbody>
-                    <tfoot class="bg-gray-50">
+                    <tfoot class="bg-gray-50 dark:bg-gray-700/30">
                         <tr>
                             <td
                                 colspan="5"
-                                class="px-6 py-3 text-right text-sm font-bold text-gray-900 uppercase"
+                                class="px-6 py-4 text-right text-sm font-bold text-gray-900 dark:text-white uppercase tracking-wider"
                                 >Total SKS</td
                             >
                             <td
-                                class="px-6 py-3 text-center text-sm font-bold text-blue-600 border-t border-gray-200 bg-blue-50"
+                                class="px-6 py-4 text-center text-base font-bold text-primary border-t-2 border-primary/20 bg-primary/5"
                                 >{data.totalSks}</td
                             >
                         </tr>
@@ -166,44 +164,22 @@
             </div>
 
             <div
-                class="flex flex-col sm:flex-row justify-center gap-4 no-print"
+                class="flex flex-col sm:flex-row justify-end gap-4 no-print"
             >
                 <button
                     onclick={() => window.print()}
-                    class="inline-flex justify-center items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+                    class="inline-flex justify-center items-center px-6 py-3 border-2 border-slate-900 dark:border-white shadow-sm text-sm font-bold uppercase tracking-wider rounded-lg text-slate-900 dark:text-white hover:bg-slate-900 hover:text-white dark:hover:bg-white dark:hover:text-slate-900 transition-all"
                 >
-                    <svg
-                        class="w-5 h-5 mr-2 text-gray-500"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                        ><path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"
-                        ></path></svg
-                    >
+                    <span class="material-symbols-outlined mr-2 text-lg">print</span>
                     Cetak KRS
                 </button>
                 {#if data.user?.role === "mahasiswa"}
                     <a
                         href="/krs/input"
-                        class="inline-flex justify-center items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+                        class="inline-flex justify-center items-center px-6 py-3 border-2 border-primary shadow-lg text-sm font-bold uppercase tracking-wider rounded-lg text-white bg-primary hover:bg-orange-600 border-orange-600 transition-all"
                     >
-                        <svg
-                            class="w-5 h-5 mr-2"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                            ><path
-                                stroke-linecap="round"
-                                stroke-linejoin="round"
-                                stroke-width="2"
-                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                            ></path></svg
-                        >
-                        Edit / Tambah Mata Kuliah
+                        <span class="material-symbols-outlined mr-2 text-lg">edit</span>
+                        Edit Rencana Studi
                     </a>
                 {/if}
             </div>
