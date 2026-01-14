@@ -1,0 +1,71 @@
+{
+	"/": [
+		"src/routes/+page.server.ts",
+		"src/routes/+layout.server.ts",
+		"src/routes/+layout.server.ts"
+	],
+	"/dosen": [
+		"src/routes/dosen/+page.server.ts",
+		"src/routes/+layout.server.ts"
+	],
+	"/dosen/assign": [
+		"src/routes/dosen/assign/+page.server.ts",
+		"src/routes/+layout.server.ts"
+	],
+	"/dosen/create": [
+		"src/routes/dosen/create/+page.server.ts",
+		"src/routes/+layout.server.ts"
+	],
+	"/dosen/[nip]/edit": [
+		"src/routes/dosen/[nip]/edit/+page.server.ts",
+		"src/routes/+layout.server.ts"
+	],
+	"/krs": [
+		"src/routes/krs/+page.server.ts",
+		"src/routes/+layout.server.ts"
+	],
+	"/krs/input": [
+		"src/routes/krs/input/+page.server.ts",
+		"src/routes/+layout.server.ts"
+	],
+	"/login": [
+		"src/routes/login/+page.server.ts",
+		"src/routes/+layout.server.ts"
+	],
+	"/logout": [
+		"src/routes/logout/+page.server.ts",
+		"src/routes/+layout.server.ts"
+	],
+	"/mahasiswa": [
+		"src/routes/mahasiswa/+page.server.ts",
+		"src/routes/+layout.server.ts"
+	],
+	"/mahasiswa/create": [
+		"src/routes/mahasiswa/create/+page.server.ts",
+		"src/routes/+layout.server.ts"
+	],
+	"/mahasiswa/[nim]/edit": [
+		"src/routes/mahasiswa/[nim]/edit/+page.server.ts",
+		"src/routes/+layout.server.ts"
+	],
+	"/matakuliah": [
+		"src/routes/matakuliah/+page.server.ts",
+		"src/routes/+layout.server.ts"
+	],
+	"/matakuliah/create": [
+		"src/routes/matakuliah/create/+page.server.ts",
+		"src/routes/+layout.server.ts"
+	],
+	"/matakuliah/[kode]/edit": [
+		"src/routes/matakuliah/[kode]/edit/+page.server.ts",
+		"src/routes/+layout.server.ts"
+	],
+	"/nilai": [
+		"src/routes/nilai/+page.server.ts",
+		"src/routes/+layout.server.ts"
+	],
+	"/nilai/input": [
+		"src/routes/nilai/input/+page.server.ts",
+		"src/routes/+layout.server.ts"
+	]
+}
