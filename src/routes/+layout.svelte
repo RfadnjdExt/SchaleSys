@@ -128,7 +128,18 @@
 
             <!-- User Section -->
             {#if user}
-                <div class="flex items-center space-x-4">
+                <div class="flex items-center space-x-2 md:space-x-4">
+                    <!-- Mobile MomoTalk Button -->
+                    <a
+                        href="/momotalk"
+                        class="md:hidden w-9 h-9 flex items-center justify-center rounded-full bg-orange-50 text-orange-500 hover:bg-orange-100 transition-colors"
+                        title="MomoTalk"
+                    >
+                        <span class="material-symbols-outlined text-xl"
+                            >forum</span
+                        >
+                    </a>
+
                     <div class="text-right hidden sm:block">
                         <p
                             class="text-[10px] uppercase font-bold text-gray-400"
