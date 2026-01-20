@@ -173,7 +173,7 @@
                     <input
                         type="text"
                         bind:value={query}
-                        placeholder="Ask Arona..."
+                        placeholder="Ask Momok Chat..."
                         class="flex-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 focus:outline-none transition-all shadow-sm"
                     />
                     <button

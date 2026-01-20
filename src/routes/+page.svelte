@@ -234,7 +234,7 @@
 			<div class="space-y-3">
 				{#if data.user?.role !== "mahasiswa"}
 					<a
-						href="/nilai/create"
+						href="/nilai/input"
 						class="flex items-center justify-between p-4 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 hover:border-primary hover:shadow-md transition-all group"
 					>
 						<div class="flex items-center space-x-3">
