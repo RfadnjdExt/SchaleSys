@@ -4,6 +4,9 @@
 		"src/routes/+layout.server.ts",
 		"src/routes/+layout.server.ts"
 	],
+	"/api/arona": [
+		"src/routes/api/arona/+server.ts"
+	],
 	"/dosen": [
 		"src/routes/dosen/+page.server.ts",
 		"src/routes/+layout.server.ts"
@@ -58,6 +61,14 @@
 	],
 	"/matakuliah/[kode]/edit": [
 		"src/routes/matakuliah/[kode]/edit/+page.server.ts",
+		"src/routes/+layout.server.ts"
+	],
+	"/momotalk": [
+		"src/routes/momotalk/+page.server.ts",
+		"src/routes/+layout.server.ts"
+	],
+	"/momotalk/[id]": [
+		"src/routes/momotalk/[id]/+page.server.ts",
 		"src/routes/+layout.server.ts"
 	],
 	"/nilai": [

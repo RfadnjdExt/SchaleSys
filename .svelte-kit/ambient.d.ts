@@ -26,23 +26,27 @@
  * ```
  */
 declare module '$env/static/private' {
+	export const GEMINI_API_KEY: string;
 	export const ALLUSERSPROFILE: string;
+	export const ANDROID_NDK_HOME: string;
+	export const ANTIGRAVITY_AGENT: string;
 	export const ANTIGRAVITY_CLI_ALIAS: string;
 	export const APPDATA: string;
 	export const CHROME_CRASHPAD_PIPE_NAME: string;
+	export const CMAKE_GENERATOR: string;
 	export const COLORTERM: string;
 	export const CommonProgramFiles: string;
 	export const CommonProgramW6432: string;
 	export const COMPUTERNAME: string;
 	export const ComSpec: string;
 	export const DriverData: string;
-	export const EFC_8064_1592913036: string;
+	export const EFC_10520_1592913036: string;
+	export const FPS_BROWSER_APP_PROFILE_STRING: string;
+	export const FPS_BROWSER_USER_PROFILE_STRING: string;
 	export const GIT_ASKPASS: string;
-	export const GNUPLOT_LIB: string;
-	export const GNUTERM: string;
+	export const GOPATH: string;
 	export const HOMEDRIVE: string;
 	export const HOMEPATH: string;
-	export const IGCCSVC_DB: string;
 	export const LANG: string;
 	export const LOCALAPPDATA: string;
 	export const LOGONSERVER: string;
@@ -60,12 +64,12 @@ declare module '$env/static/private' {
 	export const npm_package_version: string;
 	export const NUMBER_OF_PROCESSORS: string;
 	export const OneDrive: string;
-	export const OnlineServices: string;
+	export const OneDriveConsumer: string;
 	export const ORIGINAL_XDG_CURRENT_DESKTOP: string;
 	export const OS: string;
+	export const PAGER: string;
 	export const Path: string;
 	export const PATHEXT: string;
-	export const platformcode: string;
 	export const PROCESSOR_ARCHITECTURE: string;
 	export const PROCESSOR_IDENTIFIER: string;
 	export const PROCESSOR_LEVEL: string;
@@ -76,7 +80,6 @@ declare module '$env/static/private' {
 	export const PSModulePath: string;
 	export const PUBLIC: string;
 	export const PWD: string;
-	export const RegionCode: string;
 	export const SESSIONNAME: string;
 	export const SystemDrive: string;
 	export const SystemRoot: string;
@@ -127,23 +130,27 @@ declare module '$env/static/public' {
  */
 declare module '$env/dynamic/private' {
 	export const env: {
+		GEMINI_API_KEY: string;
 		ALLUSERSPROFILE: string;
+		ANDROID_NDK_HOME: string;
+		ANTIGRAVITY_AGENT: string;
 		ANTIGRAVITY_CLI_ALIAS: string;
 		APPDATA: string;
 		CHROME_CRASHPAD_PIPE_NAME: string;
+		CMAKE_GENERATOR: string;
 		COLORTERM: string;
 		CommonProgramFiles: string;
 		CommonProgramW6432: string;
 		COMPUTERNAME: string;
 		ComSpec: string;
 		DriverData: string;
-		EFC_8064_1592913036: string;
+		EFC_10520_1592913036: string;
+		FPS_BROWSER_APP_PROFILE_STRING: string;
+		FPS_BROWSER_USER_PROFILE_STRING: string;
 		GIT_ASKPASS: string;
-		GNUPLOT_LIB: string;
-		GNUTERM: string;
+		GOPATH: string;
 		HOMEDRIVE: string;
 		HOMEPATH: string;
-		IGCCSVC_DB: string;
 		LANG: string;
 		LOCALAPPDATA: string;
 		LOGONSERVER: string;
@@ -161,12 +168,12 @@ declare module '$env/dynamic/private' {
 		npm_package_version: string;
 		NUMBER_OF_PROCESSORS: string;
 		OneDrive: string;
-		OnlineServices: string;
+		OneDriveConsumer: string;
 		ORIGINAL_XDG_CURRENT_DESKTOP: string;
 		OS: string;
+		PAGER: string;
 		Path: string;
 		PATHEXT: string;
-		platformcode: string;
 		PROCESSOR_ARCHITECTURE: string;
 		PROCESSOR_IDENTIFIER: string;
 		PROCESSOR_LEVEL: string;
@@ -177,7 +184,6 @@ declare module '$env/dynamic/private' {
 		PSModulePath: string;
 		PUBLIC: string;
 		PWD: string;
-		RegionCode: string;
 		SESSIONNAME: string;
 		SystemDrive: string;
 		SystemRoot: string;

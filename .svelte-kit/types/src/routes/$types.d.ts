@@ -13,8 +13,8 @@ type OptionalUnion<U extends Record<string, any>, A extends keyof U = U extends 
 export type Snapshot<T = any> = Kit.Snapshot<T>;
 type PageServerParentData = EnsureDefined<LayoutServerData>;
 type PageParentData = EnsureDefined<LayoutData>;
-type LayoutRouteId = RouteId | "/" | "/dosen" | "/dosen/assign" | "/dosen/create" | "/dosen/[nip]/edit" | "/krs" | "/krs/input" | "/login" | "/logout" | "/mahasiswa" | "/mahasiswa/create" | "/mahasiswa/[nim]/edit" | "/matakuliah" | "/matakuliah/create" | "/matakuliah/[kode]/edit" | "/nilai" | "/nilai/input" | null
-type LayoutParams = RouteParams & { nip?: string; nim?: string; kode?: string }
+type LayoutRouteId = RouteId | "/" | "/dosen" | "/dosen/assign" | "/dosen/create" | "/dosen/[nip]/edit" | "/krs" | "/krs/input" | "/login" | "/logout" | "/mahasiswa" | "/mahasiswa/create" | "/mahasiswa/[nim]/edit" | "/matakuliah" | "/matakuliah/create" | "/matakuliah/[kode]/edit" | "/momotalk" | "/momotalk/[id]" | "/nilai" | "/nilai/input" | null
+type LayoutParams = RouteParams & { nip?: string; nim?: string; kode?: string; id?: string }
 type LayoutServerParentData = EnsureDefined<{}>;
 type LayoutParentData = EnsureDefined<{}>;
 

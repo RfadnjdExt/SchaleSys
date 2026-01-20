@@ -19,7 +19,9 @@ export const nodes = [
 	() => import('./nodes/15'),
 	() => import('./nodes/16'),
 	() => import('./nodes/17'),
-	() => import('./nodes/18')
+	() => import('./nodes/18'),
+	() => import('./nodes/19'),
+	() => import('./nodes/20')
 ];
 
 export const server_loads = [0];
@@ -40,8 +42,10 @@ export const dictionary = {
 		"/matakuliah": [~14],
 		"/matakuliah/create": [~15],
 		"/matakuliah/[kode]/edit": [~16],
-		"/nilai": [~17],
-		"/nilai/input": [~18]
+		"/momotalk": [~17],
+		"/momotalk/[id]": [~18],
+		"/nilai": [~19],
+		"/nilai/input": [~20]
 	};
 
 export const hooks = {

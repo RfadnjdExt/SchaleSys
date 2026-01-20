@@ -1,1 +1,1 @@
-export { default as component } from "../../../../src/routes/nilai/+page.svelte";
+export { default as component } from "../../../../src/routes/momotalk/+page.svelte";
