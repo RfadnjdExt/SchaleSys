@@ -1,0 +1,982 @@
+[
+    {
+        "nama": "Michiru (Dress)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/3/32/Michiru_%28Dress%29.png/40px-Michiru_%28Dress%29.png"
+    },
+    {
+        "nama": "Tsukuyo (Dress)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/e/ef/Tsukuyo_%28Dress%29.png/40px-Tsukuyo_%28Dress%29.png"
+    },
+    {
+        "nama": "Takane",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/0/0a/Takane.png/40px-Takane.png"
+    },
+    {
+        "nama": "Yakumo",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/b/ba/Yakumo.png/40px-Yakumo.png"
+    },
+    {
+        "nama": "Subaru",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/c/c3/Subaru.png/40px-Subaru.png"
+    },
+    {
+        "nama": "Reisa (Magical)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/6/67/Reisa_%28Magical%29.png/40px-Reisa_%28Magical%29.png"
+    },
+    {
+        "nama": "Suzumi (Magical)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/5/54/Suzumi_%28Magical%29.png/40px-Suzumi_%28Magical%29.png"
+    },
+    {
+        "nama": "Rabu",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/0/09/Rabu.png/40px-Rabu.png"
+    },
+    {
+        "nama": "Ritsu",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/c/c8/Ritsu.png/40px-Ritsu.png"
+    },
+    {
+        "nama": "Fuyu",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/a/a9/Fuyu.png/40px-Fuyu.png"
+    },
+    {
+        "nama": "Miyo",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/7/7b/Miyo.png/40px-Miyo.png"
+    },
+    {
+        "nama": "Misaki (Swimsuit)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/2/2b/Misaki_%28Swimsuit%29.png/40px-Misaki_%28Swimsuit%29.png"
+    },
+    {
+        "nama": "Eri",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/d/da/Eri.png/40px-Eri.png"
+    },
+    {
+        "nama": "Kanoe",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/a/a7/Kanoe.png/40px-Kanoe.png"
+    },
+    {
+        "nama": "Mika (Swimsuit)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/6/6e/Mika_%28Swimsuit%29.png/40px-Mika_%28Swimsuit%29.png"
+    },
+    {
+        "nama": "Nagisa (Swimsuit)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/d/d4/Nagisa_%28Swimsuit%29.png/40px-Nagisa_%28Swimsuit%29.png"
+    },
+    {
+        "nama": "Hasumi (Swimsuit)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/6/62/Hasumi_%28Swimsuit%29.png/40px-Hasumi_%28Swimsuit%29.png"
+    },
+    {
+        "nama": "Seia (Swimsuit)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/f/f5/Seia_%28Swimsuit%29.png/40px-Seia_%28Swimsuit%29.png"
+    },
+    {
+        "nama": "Ichika (Swimsuit)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/2/24/Ichika_%28Swimsuit%29.png/40px-Ichika_%28Swimsuit%29.png"
+    },
+    {
+        "nama": "Kikyou (Swimsuit)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/4/49/Kikyou_%28Swimsuit%29.png/40px-Kikyou_%28Swimsuit%29.png"
+    },
+    {
+        "nama": "Yukari (Swimsuit)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/c/c9/Yukari_%28Swimsuit%29.png/40px-Yukari_%28Swimsuit%29.png"
+    },
+    {
+        "nama": "Renge (Swimsuit)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/2/2f/Renge_%28Swimsuit%29.png/40px-Renge_%28Swimsuit%29.png"
+    },
+    {
+        "nama": "Natsu (Band)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/0/0a/Natsu_%28Band%29.png/40px-Natsu_%28Band%29.png"
+    },
+    {
+        "nama": "Nagusa",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/b/bb/Nagusa.png/40px-Nagusa.png"
+    },
+    {
+        "nama": "Niya",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/0/07/Niya.png/40px-Niya.png"
+    },
+    {
+        "nama": "Pina (Guide)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/e/e5/Pina_%28Guide%29.png/40px-Pina_%28Guide%29.png"
+    },
+    {
+        "nama": "Hikari",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/e/ee/Hikari.png/40px-Hikari.png"
+    },
+    {
+        "nama": "Nozomi",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/0/0b/Nozomi.png/40px-Nozomi.png"
+    },
+    {
+        "nama": "Aoba",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/4/42/Aoba.png/40px-Aoba.png"
+    },
+    {
+        "nama": "Saori (Dress)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/e/e4/Saori_%28Dress%29.png/40px-Saori_%28Dress%29.png"
+    },
+    {
+        "nama": "Rei",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/a/a3/Rei.png/40px-Rei.png"
+    },
+    {
+        "nama": "Sumire (Part-Timer)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/6/66/Sumire_%28Part-Timer%29.png/40px-Sumire_%28Part-Timer%29.png"
+    },
+    {
+        "nama": "Izumi (New Year)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/e/e3/Izumi_%28New_Year%29.png/40px-Izumi_%28New_Year%29.png"
+    },
+    {
+        "nama": "Juri (Part-Timer)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/3/33/Juri_%28Part-Timer%29.png/40px-Juri_%28Part-Timer%29.png"
+    },
+    {
+        "nama": "Sena (Casual)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/b/b4/Sena_%28Casual%29.png/40px-Sena_%28Casual%29.png"
+    },
+    {
+        "nama": "Maki (Camping)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/2/21/Maki_%28Camping%29.png/40px-Maki_%28Camping%29.png"
+    },
+    {
+        "nama": "Neru (School Uniform)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/1/16/Neru_%28School_Uniform%29.png/40px-Neru_%28School_Uniform%29.png"
+    },
+    {
+        "nama": "Rio",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/4/4a/Rio.png/40px-Rio.png"
+    },
+    {
+        "nama": "Asuna (School Uniform)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/0/01/Asuna_%28School_Uniform%29.png/40px-Asuna_%28School_Uniform%29.png"
+    },
+    {
+        "nama": "Seia",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/4/46/Seia.png/40px-Seia.png"
+    },
+    {
+        "nama": "Karin (School Uniform)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/d/d1/Karin_%28School_Uniform%29.png/40px-Karin_%28School_Uniform%29.png"
+    },
+    {
+        "nama": "Noa (Pajama)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/1/14/Noa_%28Pajama%29.png/40px-Noa_%28Pajama%29.png"
+    },
+    {
+        "nama": "Yuuka (Pajama)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/a/ad/Yuuka_%28Pajama%29.png/40px-Yuuka_%28Pajama%29.png"
+    },
+    {
+        "nama": "Chiaki",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/a/a4/Chiaki.png/40px-Chiaki.png"
+    },
+    {
+        "nama": "Satsuki",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/e/e9/Satsuki.png/40px-Satsuki.png"
+    },
+    {
+        "nama": "Mari (Idol)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/f/f6/Mari_%28Idol%29.png/40px-Mari_%28Idol%29.png"
+    },
+    {
+        "nama": "Sakurako (Idol)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/2/27/Sakurako_%28Idol%29.png/40px-Sakurako_%28Idol%29.png"
+    },
+    {
+        "nama": "Mine (Idol)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/2/29/Mine_%28Idol%29.png/40px-Mine_%28Idol%29.png"
+    },
+    {
+        "nama": "Kisaki",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/5/55/Kisaki.png/40px-Kisaki.png"
+    },
+    {
+        "nama": "Reijo",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/4/4d/Reijo.png/40px-Reijo.png"
+    },
+    {
+        "nama": "Marina (Qipao)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/6/6a/Marina_%28Qipao%29.png/40px-Marina_%28Qipao%29.png"
+    },
+    {
+        "nama": "Tomoe (Qipao)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/2/2d/Tomoe_%28Qipao%29.png/40px-Tomoe_%28Qipao%29.png"
+    },
+    {
+        "nama": "Hiyori (Swimsuit)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/5/53/Hiyori_%28Swimsuit%29.png/40px-Hiyori_%28Swimsuit%29.png"
+    },
+    {
+        "nama": "Saori (Swimsuit)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/5/54/Saori_%28Swimsuit%29.png/40px-Saori_%28Swimsuit%29.png"
+    },
+    {
+        "nama": "Hoshino (Battle)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/a/a2/Hoshino_%28Battle%29.png/40px-Hoshino_%28Battle%29.png"
+    },
+    {
+        "nama": "Shiroko＊Terror",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/f/f9/Shiroko%EF%BC%8ATerror.png/40px-Shiroko%EF%BC%8ATerror.png"
+    },
+    {
+        "nama": "Atsuko (Swimsuit)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/1/1b/Atsuko_%28Swimsuit%29.png/40px-Atsuko_%28Swimsuit%29.png"
+    },
+    {
+        "nama": "Moe (Swimsuit)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/7/77/Moe_%28Swimsuit%29.png/40px-Moe_%28Swimsuit%29.png"
+    },
+    {
+        "nama": "Fubuki (Swimsuit)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/3/34/Fubuki_%28Swimsuit%29.png/40px-Fubuki_%28Swimsuit%29.png"
+    },
+    {
+        "nama": "Kanna (Swimsuit)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/8/83/Kanna_%28Swimsuit%29.png/40px-Kanna_%28Swimsuit%29.png"
+    },
+    {
+        "nama": "Kirino (Swimsuit)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/c/cc/Kirino_%28Swimsuit%29.png/40px-Kirino_%28Swimsuit%29.png"
+    },
+    {
+        "nama": "Serika (Swimsuit)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/0/0f/Serika_%28Swimsuit%29.png/40px-Serika_%28Swimsuit%29.png"
+    },
+    {
+        "nama": "Midori (Maid)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/2/29/Midori_%28Maid%29.png/40px-Midori_%28Maid%29.png"
+    },
+    {
+        "nama": "Momoi (Maid)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/3/31/Momoi_%28Maid%29.png/40px-Momoi_%28Maid%29.png"
+    },
+    {
+        "nama": "Kirara",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/3/3f/Kirara.png/40px-Kirara.png"
+    },
+    {
+        "nama": "Kazusa (Band)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/3/36/Kazusa_%28Band%29.png/40px-Kazusa_%28Band%29.png"
+    },
+    {
+        "nama": "Yoshimi (Band)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/c/ca/Yoshimi_%28Band%29.png/40px-Yoshimi_%28Band%29.png"
+    },
+    {
+        "nama": "Airi (Band)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/c/c5/Airi_%28Band%29.png/40px-Airi_%28Band%29.png"
+    },
+    {
+        "nama": "Tsubaki (Guide)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/e/ef/Tsubaki_%28Guide%29.png/40px-Tsubaki_%28Guide%29.png"
+    },
+    {
+        "nama": "Umika",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/e/e2/Umika.png/40px-Umika.png"
+    },
+    {
+        "nama": "Akari (New Year)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/a/ae/Akari_%28New_Year%29.png/40px-Akari_%28New_Year%29.png"
+    },
+    {
+        "nama": "Aru (Dress)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/1/1f/Aru_%28Dress%29.png/40px-Aru_%28Dress%29.png"
+    },
+    {
+        "nama": "Kayoko (Dress)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/9/9b/Kayoko_%28Dress%29.png/40px-Kayoko_%28Dress%29.png"
+    },
+    {
+        "nama": "Hina (Dress)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/2/20/Hina_%28Dress%29.png/40px-Hina_%28Dress%29.png"
+    },
+    {
+        "nama": "Ako (Dress)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/f/fc/Ako_%28Dress%29.png/40px-Ako_%28Dress%29.png"
+    },
+    {
+        "nama": "Makoto",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/2/20/Makoto.png/40px-Makoto.png"
+    },
+    {
+        "nama": "Ibuki",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/7/75/Ibuki.png/40px-Ibuki.png"
+    },
+    {
+        "nama": "Hare (Camping)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/a/a2/Hare_%28Camping%29.png/40px-Hare_%28Camping%29.png"
+    },
+    {
+        "nama": "Kotama (Camping)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/1/19/Kotama_%28Camping%29.png/40px-Kotama_%28Camping%29.png"
+    },
+    {
+        "nama": "Eimi (Swimsuit)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/c/ce/Eimi_%28Swimsuit%29.png/40px-Eimi_%28Swimsuit%29.png"
+    },
+    {
+        "nama": "Kikyou",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/6/62/Kikyou.png/40px-Kikyou.png"
+    },
+    {
+        "nama": "Renge",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/e/e4/Renge.png/40px-Renge.png"
+    },
+    {
+        "nama": "Yukari",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/2/2b/Yukari.png/40px-Yukari.png"
+    },
+    {
+        "nama": "Misaka Mikoto",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/7/76/Misaka_Mikoto.png/40px-Misaka_Mikoto.png"
+    },
+    {
+        "nama": "Shokuhou Misaki",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/6/66/Shokuhou_Misaki.png/40px-Shokuhou_Misaki.png"
+    },
+    {
+        "nama": "Saten Ruiko",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/b/b0/Saten_Ruiko.png/40px-Saten_Ruiko.png"
+    },
+    {
+        "nama": "Shigure (Hot Spring)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/d/da/Shigure_%28Hot_Spring%29.png/40px-Shigure_%28Hot_Spring%29.png"
+    },
+    {
+        "nama": "Ichika",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/b/b3/Ichika.png/40px-Ichika.png"
+    },
+    {
+        "nama": "Kasumi",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/6/6b/Kasumi.png/40px-Kasumi.png"
+    },
+    {
+        "nama": "Haruna (Sportswear)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/a/af/Haruna_%28Sportswear%29.png/40px-Haruna_%28Sportswear%29.png"
+    },
+    {
+        "nama": "Kotori (Cheerleader)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/8/89/Kotori_%28Cheerleader%29.png/40px-Kotori_%28Cheerleader%29.png"
+    },
+    {
+        "nama": "Meru",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/4/4f/Meru.png/40px-Meru.png"
+    },
+    {
+        "nama": "Momiji",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/5/53/Momiji.png/40px-Momiji.png"
+    },
+    {
+        "nama": "Mimori (Swimsuit)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/2/22/Mimori_%28Swimsuit%29.png/40px-Mimori_%28Swimsuit%29.png"
+    },
+    {
+        "nama": "Hanako (Swimsuit)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/c/c5/Hanako_%28Swimsuit%29.png/40px-Hanako_%28Swimsuit%29.png"
+    },
+    {
+        "nama": "Hinata (Swimsuit)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/0/08/Hinata_%28Swimsuit%29.png/40px-Hinata_%28Swimsuit%29.png"
+    },
+    {
+        "nama": "Ui (Swimsuit)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/6/60/Ui_%28Swimsuit%29.png/40px-Ui_%28Swimsuit%29.png"
+    },
+    {
+        "nama": "Koharu (Swimsuit)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/d/df/Koharu_%28Swimsuit%29.png/40px-Koharu_%28Swimsuit%29.png"
+    },
+    {
+        "nama": "Shiroko (Swimsuit)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/4/4e/Shiroko_%28Swimsuit%29.png/40px-Shiroko_%28Swimsuit%29.png"
+    },
+    {
+        "nama": "Miyako (Swimsuit)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/9/97/Miyako_%28Swimsuit%29.png/40px-Miyako_%28Swimsuit%29.png"
+    },
+    {
+        "nama": "Saki (Swimsuit)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/1/13/Saki_%28Swimsuit%29.png/40px-Saki_%28Swimsuit%29.png"
+    },
+    {
+        "nama": "Miyu (Swimsuit)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/d/d1/Miyu_%28Swimsuit%29.png/40px-Miyu_%28Swimsuit%29.png"
+    },
+    {
+        "nama": "Minori",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/1/1a/Minori.png/40px-Minori.png"
+    },
+    {
+        "nama": "Mina",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/6/6b/Mina.png/40px-Mina.png"
+    },
+    {
+        "nama": "Rumi",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/7/7d/Rumi.png/40px-Rumi.png"
+    },
+    {
+        "nama": "Reisa",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/3/34/Reisa.png/40px-Reisa.png"
+    },
+    {
+        "nama": "Arisu (Maid)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/b/b4/Arisu_%28Maid%29.png/40px-Arisu_%28Maid%29.png"
+    },
+    {
+        "nama": "Toki (Bunny Girl)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/8/83/Toki_%28Bunny_Girl%29.png/40px-Toki_%28Bunny_Girl%29.png"
+    },
+    {
+        "nama": "Yuzu (Maid)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/1/17/Yuzu_%28Maid%29.png/40px-Yuzu_%28Maid%29.png"
+    },
+    {
+        "nama": "Kaho",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/6/63/Kaho.png/40px-Kaho.png"
+    },
+    {
+        "nama": "Haruka (New Year)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/d/d9/Haruka_%28New_Year%29.png/40px-Haruka_%28New_Year%29.png"
+    },
+    {
+        "nama": "Kayoko (New Year)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/0/0d/Kayoko_%28New_Year%29.png/40px-Kayoko_%28New_Year%29.png"
+    },
+    {
+        "nama": "Koyuki",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/a/af/Koyuki.png/40px-Koyuki.png"
+    },
+    {
+        "nama": "Nagisa",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/6/6a/Nagisa.png/40px-Nagisa.png"
+    },
+    {
+        "nama": "Toki",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/e/e4/Toki.png/40px-Toki.png"
+    },
+    {
+        "nama": "Sakurako",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/f/f0/Sakurako.png/40px-Sakurako.png"
+    },
+    {
+        "nama": "Kanna",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/4/47/Kanna.png/40px-Kanna.png"
+    },
+    {
+        "nama": "Megu",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/d/d4/Megu.png/40px-Megu.png"
+    },
+    {
+        "nama": "Mika",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/c/c8/Mika.png/40px-Mika.png"
+    },
+    {
+        "nama": "Mine",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/a/a0/Mine.png/40px-Mine.png"
+    },
+    {
+        "nama": "Fuuka (New Year)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/1/13/Fuuka_%28New_Year%29.png/40px-Fuuka_%28New_Year%29.png"
+    },
+    {
+        "nama": "Haruna (New Year)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/b/b3/Haruna_%28New_Year%29.png/40px-Haruna_%28New_Year%29.png"
+    },
+    {
+        "nama": "Junko (New Year)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/d/d0/Junko_%28New_Year%29.png/40px-Junko_%28New_Year%29.png"
+    },
+    {
+        "nama": "Hanae (Christmas)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/1/1a/Hanae_%28Christmas%29.png/40px-Hanae_%28Christmas%29.png"
+    },
+    {
+        "nama": "Serina (Christmas)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/1/19/Serina_%28Christmas%29.png/40px-Serina_%28Christmas%29.png"
+    },
+    {
+        "nama": "Shigure",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/d/da/Shigure.png/40px-Shigure.png"
+    },
+    {
+        "nama": "Himari",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/5/5a/Himari.png/40px-Himari.png"
+    },
+    {
+        "nama": "Mari (Sportswear)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/8/88/Mari_%28Sportswear%29.png/40px-Mari_%28Sportswear%29.png"
+    },
+    {
+        "nama": "Yuuka (Sportswear)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/6/60/Yuuka_%28Sportswear%29.png/40px-Yuuka_%28Sportswear%29.png"
+    },
+    {
+        "nama": "Hasumi (Sportswear)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/8/80/Hasumi_%28Sportswear%29.png/40px-Hasumi_%28Sportswear%29.png"
+    },
+    {
+        "nama": "Akane (Bunny Girl)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/9/99/Akane_%28Bunny_Girl%29.png/40px-Akane_%28Bunny_Girl%29.png"
+    },
+    {
+        "nama": "Noa",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/2/23/Noa.png/40px-Noa.png"
+    },
+    {
+        "nama": "Utaha (Cheerleader)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/7/7b/Utaha_%28Cheerleader%29.png/40px-Utaha_%28Cheerleader%29.png"
+    },
+    {
+        "nama": "Hibiki (Cheerleader)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/b/bf/Hibiki_%28Cheerleader%29.png/40px-Hibiki_%28Cheerleader%29.png"
+    },
+    {
+        "nama": "Kokona",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/8/83/Kokona.png/40px-Kokona.png"
+    },
+    {
+        "nama": "Kazusa",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/b/b3/Kazusa.png/40px-Kazusa.png"
+    },
+    {
+        "nama": "Moe",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/c/cc/Moe.png/40px-Moe.png"
+    },
+    {
+        "nama": "Saori",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/4/46/Saori.png/40px-Saori.png"
+    },
+    {
+        "nama": "Chise (Swimsuit)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/1/1e/Chise_%28Swimsuit%29.png/40px-Chise_%28Swimsuit%29.png"
+    },
+    {
+        "nama": "Izuna (Swimsuit)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/3/37/Izuna_%28Swimsuit%29.png/40px-Izuna_%28Swimsuit%29.png"
+    },
+    {
+        "nama": "Hoshino (Swimsuit)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/c/c2/Hoshino_%28Swimsuit%29.png/40px-Hoshino_%28Swimsuit%29.png"
+    },
+    {
+        "nama": "Shizuko (Swimsuit)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/f/f2/Shizuko_%28Swimsuit%29.png/40px-Shizuko_%28Swimsuit%29.png"
+    },
+    {
+        "nama": "Nonomi (Swimsuit)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/9/98/Nonomi_%28Swimsuit%29.png/40px-Nonomi_%28Swimsuit%29.png"
+    },
+    {
+        "nama": "Wakamo (Swimsuit)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/e/e2/Wakamo_%28Swimsuit%29.png/40px-Wakamo_%28Swimsuit%29.png"
+    },
+    {
+        "nama": "Ayane (Swimsuit)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/f/f6/Ayane_%28Swimsuit%29.png/40px-Ayane_%28Swimsuit%29.png"
+    },
+    {
+        "nama": "Atsuko",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/c/c7/Atsuko.png/40px-Atsuko.png"
+    },
+    {
+        "nama": "Hiyori",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/7/76/Hiyori.png/40px-Hiyori.png"
+    },
+    {
+        "nama": "Misaki",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/a/ae/Misaki.png/40px-Misaki.png"
+    },
+    {
+        "nama": "Tsukuyo",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/c/ce/Tsukuyo.png/40px-Tsukuyo.png"
+    },
+    {
+        "nama": "Iroha",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/b/bf/Iroha.png/40px-Iroha.png"
+    },
+    {
+        "nama": "Kaede",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/f/f0/Kaede.png/40px-Kaede.png"
+    },
+    {
+        "nama": "Michiru",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/e/e6/Michiru.png/40px-Michiru.png"
+    },
+    {
+        "nama": "Miyu",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/a/ac/Miyu.png/40px-Miyu.png"
+    },
+    {
+        "nama": "Miyako",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/3/3e/Miyako.png/40px-Miyako.png"
+    },
+    {
+        "nama": "Saki",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/d/d0/Saki.png/40px-Saki.png"
+    },
+    {
+        "nama": "Marina",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/9/9d/Marina.png/40px-Marina.png"
+    },
+    {
+        "nama": "Hinata",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/9/97/Hinata.png/40px-Hinata.png"
+    },
+    {
+        "nama": "Ui",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/1/18/Ui.png/40px-Ui.png"
+    },
+    {
+        "nama": "Mimori",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/8/82/Mimori.png/40px-Mimori.png"
+    },
+    {
+        "nama": "Chihiro",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/a/a7/Chihiro.png/40px-Chihiro.png"
+    },
+    {
+        "nama": "Sena",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/f/f4/Sena.png/40px-Sena.png"
+    },
+    {
+        "nama": "Wakamo",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/a/a7/Wakamo.png/40px-Wakamo.png"
+    },
+    {
+        "nama": "Fubuki",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/c/cd/Fubuki.png/40px-Fubuki.png"
+    },
+    {
+        "nama": "Serika (New Year)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/6/61/Serika_%28New_Year%29.png/40px-Serika_%28New_Year%29.png"
+    },
+    {
+        "nama": "Aru (New Year)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/6/60/Aru_%28New_Year%29.png/40px-Aru_%28New_Year%29.png"
+    },
+    {
+        "nama": "Mutsuki (New Year)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/c/c2/Mutsuki_%28New_Year%29.png/40px-Mutsuki_%28New_Year%29.png"
+    },
+    {
+        "nama": "Nodoka (Hot Spring)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/3/3f/Nodoka_%28Hot_Spring%29.png/40px-Nodoka_%28Hot_Spring%29.png"
+    },
+    {
+        "nama": "Cherino (Hot Spring)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/9/95/Cherino_%28Hot_Spring%29.png/40px-Cherino_%28Hot_Spring%29.png"
+    },
+    {
+        "nama": "Chinatsu (Hot Spring)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/b/b1/Chinatsu_%28Hot_Spring%29.png/40px-Chinatsu_%28Hot_Spring%29.png"
+    },
+    {
+        "nama": "Tomoe",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/0/0a/Tomoe.png/40px-Tomoe.png"
+    },
+    {
+        "nama": "Ako",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/7/72/Ako.png/40px-Ako.png"
+    },
+    {
+        "nama": "Hatsune Miku",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/9/93/Hatsune_Miku.png/40px-Hatsune_Miku.png"
+    },
+    {
+        "nama": "Natsu",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/9/90/Natsu.png/40px-Natsu.png"
+    },
+    {
+        "nama": "Mari",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/4/4f/Mari.png/40px-Mari.png"
+    },
+    {
+        "nama": "Asuna (Bunny Girl)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/a/a4/Asuna_%28Bunny_Girl%29.png/40px-Asuna_%28Bunny_Girl%29.png"
+    },
+    {
+        "nama": "Karin (Bunny Girl)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/b/bd/Karin_%28Bunny_Girl%29.png/40px-Karin_%28Bunny_Girl%29.png"
+    },
+    {
+        "nama": "Neru (Bunny Girl)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/7/78/Neru_%28Bunny_Girl%29.png/40px-Neru_%28Bunny_Girl%29.png"
+    },
+    {
+        "nama": "Saya (Casual)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/e/e2/Saya_%28Casual%29.png/40px-Saya_%28Casual%29.png"
+    },
+    {
+        "nama": "Shun (Kid)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/5/53/Shun_%28Kid%29.png/40px-Shun_%28Kid%29.png"
+    },
+    {
+        "nama": "Kirino",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/8/85/Kirino.png/40px-Kirino.png"
+    },
+    {
+        "nama": "Shiroko (Riding)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/a/a0/Shiroko_%28Riding%29.png/40px-Shiroko_%28Riding%29.png"
+    },
+    {
+        "nama": "Hina (Swimsuit)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/4/44/Hina_%28Swimsuit%29.png/40px-Hina_%28Swimsuit%29.png"
+    },
+    {
+        "nama": "Iori (Swimsuit)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/5/53/Iori_%28Swimsuit%29.png/40px-Iori_%28Swimsuit%29.png"
+    },
+    {
+        "nama": "Izumi (Swimsuit)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/b/b0/Izumi_%28Swimsuit%29.png/40px-Izumi_%28Swimsuit%29.png"
+    },
+    {
+        "nama": "Hifumi (Swimsuit)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/3/32/Hifumi_%28Swimsuit%29.png/40px-Hifumi_%28Swimsuit%29.png"
+    },
+    {
+        "nama": "Azusa (Swimsuit)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/a/a4/Azusa_%28Swimsuit%29.png/40px-Azusa_%28Swimsuit%29.png"
+    },
+    {
+        "nama": "Mashiro (Swimsuit)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/2/20/Mashiro_%28Swimsuit%29.png/40px-Mashiro_%28Swimsuit%29.png"
+    },
+    {
+        "nama": "Tsurugi (Swimsuit)",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/e/e6/Tsurugi_%28Swimsuit%29.png/40px-Tsurugi_%28Swimsuit%29.png"
+    },
+    {
+        "nama": "Koharu",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/c/c3/Koharu.png/40px-Koharu.png"
+    },
+    {
+        "nama": "Azusa",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/8/86/Azusa.png/40px-Azusa.png"
+    },
+    {
+        "nama": "Hanako",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/9/9c/Hanako.png/40px-Hanako.png"
+    },
+    {
+        "nama": "Yuzu",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/7/71/Yuzu.png/40px-Yuzu.png"
+    },
+    {
+        "nama": "Cherino",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/7/7c/Cherino.png/40px-Cherino.png"
+    },
+    {
+        "nama": "Nodoka",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/e/e1/Nodoka.png/40px-Nodoka.png"
+    },
+    {
+        "nama": "Midori",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/e/ee/Midori.png/40px-Midori.png"
+    },
+    {
+        "nama": "Momoi",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/1/18/Momoi.png/40px-Momoi.png"
+    },
+    {
+        "nama": "Arisu",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/0/0f/Arisu.png/40px-Arisu.png"
+    },
+    {
+        "nama": "Izuna",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/5/54/Izuna.png/40px-Izuna.png"
+    },
+    {
+        "nama": "Shizuko",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/7/77/Shizuko.png/40px-Shizuko.png"
+    },
+    {
+        "nama": "Mashiro",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/0/06/Mashiro.png/40px-Mashiro.png"
+    },
+    {
+        "nama": "Aru",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/d/db/Aru.png/40px-Aru.png"
+    },
+    {
+        "nama": "Eimi",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/e/ed/Eimi.png/40px-Eimi.png"
+    },
+    {
+        "nama": "Haruna",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/a/a6/Haruna.png/40px-Haruna.png"
+    },
+    {
+        "nama": "Hibiki",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/b/bc/Hibiki.png/40px-Hibiki.png"
+    },
+    {
+        "nama": "Hifumi",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/3/3b/Hifumi.png/40px-Hifumi.png"
+    },
+    {
+        "nama": "Hina",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/8/83/Hina.png/40px-Hina.png"
+    },
+    {
+        "nama": "Hoshino",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/a/a9/Hoshino.png/40px-Hoshino.png"
+    },
+    {
+        "nama": "Iori",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/2/26/Iori.png/40px-Iori.png"
+    },
+    {
+        "nama": "Izumi",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/1/10/Izumi.png/40px-Izumi.png"
+    },
+    {
+        "nama": "Karin",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/5/50/Karin.png/40px-Karin.png"
+    },
+    {
+        "nama": "Maki",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/2/21/Maki.png/40px-Maki.png"
+    },
+    {
+        "nama": "Neru",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/2/24/Neru.png/40px-Neru.png"
+    },
+    {
+        "nama": "Saya",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/c/ce/Saya.png/40px-Saya.png"
+    },
+    {
+        "nama": "Shiroko",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/6/63/Shiroko.png/40px-Shiroko.png"
+    },
+    {
+        "nama": "Shun",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/1/17/Shun.png/40px-Shun.png"
+    },
+    {
+        "nama": "Sumire",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/d/d6/Sumire.png/40px-Sumire.png"
+    },
+    {
+        "nama": "Tsurugi",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/c/c1/Tsurugi.png/40px-Tsurugi.png"
+    },
+    {
+        "nama": "Airi",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/9/96/Airi.png/40px-Airi.png"
+    },
+    {
+        "nama": "Akane",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/a/aa/Akane.png/40px-Akane.png"
+    },
+    {
+        "nama": "Akari",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/7/7d/Akari.png/40px-Akari.png"
+    },
+    {
+        "nama": "Ayane",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/a/a7/Ayane.png/40px-Ayane.png"
+    },
+    {
+        "nama": "Chise",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/d/d0/Chise.png/40px-Chise.png"
+    },
+    {
+        "nama": "Fuuka",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/1/1f/Fuuka.png/40px-Fuuka.png"
+    },
+    {
+        "nama": "Hanae",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/7/72/Hanae.png/40px-Hanae.png"
+    },
+    {
+        "nama": "Hare",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/4/47/Hare.png/40px-Hare.png"
+    },
+    {
+        "nama": "Hasumi",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/8/84/Hasumi.png/40px-Hasumi.png"
+    },
+    {
+        "nama": "Junko",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/3/3c/Junko.png/40px-Junko.png"
+    },
+    {
+        "nama": "Kayoko",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/a/a5/Kayoko.png/40px-Kayoko.png"
+    },
+    {
+        "nama": "Mutsuki",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/0/0b/Mutsuki.png/40px-Mutsuki.png"
+    },
+    {
+        "nama": "Nonomi",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/a/ad/Nonomi.png/40px-Nonomi.png"
+    },
+    {
+        "nama": "Serika",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/c/c8/Serika.png/40px-Serika.png"
+    },
+    {
+        "nama": "Tsubaki",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/6/6a/Tsubaki.png/40px-Tsubaki.png"
+    },
+    {
+        "nama": "Utaha",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/3/37/Utaha.png/40px-Utaha.png"
+    },
+    {
+        "nama": "Yuuka",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/3/3e/Yuuka.png/40px-Yuuka.png"
+    },
+    {
+        "nama": "Asuna",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/9/9f/Asuna.png/40px-Asuna.png"
+    },
+    {
+        "nama": "Chinatsu",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/b/b6/Chinatsu.png/40px-Chinatsu.png"
+    },
+    {
+        "nama": "Haruka",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/b/b1/Haruka.png/40px-Haruka.png"
+    },
+    {
+        "nama": "Juri",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/3/37/Juri.png/40px-Juri.png"
+    },
+    {
+        "nama": "Kotama",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/9/94/Kotama.png/40px-Kotama.png"
+    },
+    {
+        "nama": "Kotori",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/a/ab/Kotori.png/40px-Kotori.png"
+    },
+    {
+        "nama": "Pina",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/9/96/Pina.png/40px-Pina.png"
+    },
+    {
+        "nama": "Serina",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/4/41/Serina.png/40px-Serina.png"
+    },
+    {
+        "nama": "Shimiko",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/f/f4/Shimiko.png/40px-Shimiko.png"
+    },
+    {
+        "nama": "Suzumi",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/0/07/Suzumi.png/40px-Suzumi.png"
+    },
+    {
+        "nama": "Yoshimi",
+        "foto": "https://static.wikitide.net/bluearchivewiki/thumb/c/c2/Yoshimi.png/40px-Yoshimi.png"
+    }
+]

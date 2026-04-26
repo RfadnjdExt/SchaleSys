@@ -7,3 +7,9 @@ Thumbs.db
 .vscode/
 .idea/
 *.tmp
+
+.svelte-kit
+.vercel
+build/
+package-lock.json
+bun.lockb
